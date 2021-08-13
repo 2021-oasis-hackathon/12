@@ -1,5 +1,7 @@
 package spring.server.service;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,18 @@ public class UserService{
         } else {
             return new LoginDTO(false, "비밀번호가 일치하지 않습니다.", null);
         }
+    }
+
+    public LoginDTO tokenLogin(String token) {
+        Claims claims = JwtToken.parseJwtToken(token);
+        User findUser = userRepository.findByUsername((String) claims.get("username"));
+        if (findUser == null) {
+            return new LoginDTO(false, "유저를 찾을 수 없습니다.", null);
+        }
+        if (findUser.getToken().equals(token)) {
+            return new LoginDTO(true, "로그인 성공", token);
+        }
+        return new LoginDTO(false, "토큰이 문제가 있어 로그인에 실패했습니다.", null);
     }
 
     public void create(User user) {

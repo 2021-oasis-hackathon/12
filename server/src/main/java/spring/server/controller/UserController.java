@@ -11,6 +11,7 @@ import spring.server.api.ApiMessage;
 import spring.server.domain.User;
 import spring.server.dto.LoginDTO;
 import spring.server.service.UserService;
+import spring.server.token.JwtToken;
 import spring.server.validator.UserValidator;
 
 
@@ -46,6 +47,12 @@ public class UserController {
     @PostMapping("/api/login")
     public ResponseEntity<ApiMessage> loginProcess(@RequestBody User user) {
         LoginDTO loginInfo = userService.login(user.getUsername(), user.getPassword());
+        return ResponseEntity.ok(ApiMessage.builder().data(loginInfo).message(loginInfo.getMessage()).build());
+    }
+
+    @PostMapping("/api/token-login")
+    public ResponseEntity<ApiMessage> tokenLoginProcess(@RequestBody JwtToken.Token token) {
+        LoginDTO loginInfo = userService.tokenLogin(token.getToken());
         return ResponseEntity.ok(ApiMessage.builder().data(loginInfo).message(loginInfo.getMessage()).build());
     }
 
