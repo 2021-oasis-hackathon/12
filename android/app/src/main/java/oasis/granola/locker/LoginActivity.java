@@ -25,17 +25,20 @@ import androidx.appcompat.app.AppCompatActivity;
 public class LoginActivity extends AppCompatActivity {
 
     //        private final String initialUrl = "https://www.google.co.kr/maps/@35.7924554,127.1365699,14z";
-    private final String initialUrl = "172.30.1.17:8080/login";
+    private final String initialUrl = AppHelper.hostUrl + "/login";
     private WebView webView;
     Handler handler = new Handler();
-    SharedPreferences tokenStore = getSharedPreferences("tokenStore", MODE_PRIVATE);
-    SharedPreferences.Editor editor = tokenStore.edit();
+    SharedPreferences tokenStore;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         webView = (WebView) findViewById(R.id.webView);
+
+        tokenStore = getSharedPreferences("tokenStore", MODE_PRIVATE);
+        editor = tokenStore.edit();
 
         initWebView();
     }
