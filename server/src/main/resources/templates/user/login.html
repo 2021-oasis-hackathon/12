@@ -8,13 +8,45 @@
 <body>
 
 <h1>Login</h1>
-<form action="/login" th:action="@{/login}" method="post">
+<div class="form">
+    <input type="text" id="username" name="username">
+    <input type="password" id="password" name="password">
+    <input type="submit" id="login-button" value="Login">
 
-    <input type="text" name="username">
-    <input type="password" name="password">
-    <input type="submit" value="Login">
     <a href="/signup" th:href="@{/signup}">Signup</a>
-</form>
+</div>
+<script type="text/javascript">
+    $("#login-button").on("click", function (){
+        var username = $("#username").val();
+        var password = $("#password").val();
+        $.ajax({
+            url:"/api/login",
+            method:"post",
+            data: JSON.stringify({username:username, password:password}),
+            contentType : "application/json; charset=utf-8",
+        }).
+        done(function(json) {
+            console.log(json);
+            <!--성공, 실패 다 여기로 들어옴            -->
+            <!--토큰 전달            -->
+            <!--android로 전달-->
+            if (json.data.success) {
+                callAndroid(json.data.token);
+            }
+        })
+        .fail(function(xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+            <!--서버상태 이상으로 데이터를 못가져오는 경우 알림            -->
+        })
+    })
+
+    function callAndroid(token){
+    window.myJSInterfaceName.callAndroid(token);
+}
+
+</script>
 </body>
 </html>
 

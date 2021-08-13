@@ -1,14 +1,15 @@
 package spring.server.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import spring.server.api.ApiMessage;
 import spring.server.domain.User;
+import spring.server.dto.LoginDTO;
 import spring.server.service.UserService;
 import spring.server.validator.UserValidator;
 
@@ -32,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signupProcess(@ModelAttribute("user") User user, BindingResult result) {
+    public String signupProcess(@ModelAttribute User user, BindingResult result) {
         smartValidator.validate(user, result);
         userValidator.validate(user, result);
         if (result.hasErrors()) {
@@ -40,6 +41,12 @@ public class UserController {
         }
         userService.create(user);
         return "redirect:/login";
+    }
+
+    @PostMapping("/api/login")
+    public ResponseEntity<ApiMessage> loginProcess(@RequestBody User user) {
+        LoginDTO loginInfo = userService.login(user.getUsername(), user.getPassword());
+        return ResponseEntity.ok(ApiMessage.builder().data(loginInfo).message(loginInfo.getMessage()).build());
     }
 
 }
