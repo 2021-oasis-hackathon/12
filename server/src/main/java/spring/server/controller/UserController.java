@@ -20,6 +20,11 @@ public class UserController {
     private final SmartValidator smartValidator;
     private final UserValidator userValidator;
 
+    @GetMapping("/login")
+    public String login(Model model) {
+        return "user/login";
+    }
+
     @GetMapping("/signup")
     public String signup(Model model) {
         model.addAttribute("user", new User());
