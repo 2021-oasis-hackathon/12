@@ -21,7 +21,7 @@ public class User {
     private String username; //login id
     @NotEmpty
     private String password;
-    private String role = Role.USER.name();
+    private String token;
 
 
     public void passwordEncoding(PasswordEncoder passwordEncoder) {
