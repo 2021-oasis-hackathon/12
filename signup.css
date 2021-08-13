@@ -1,0 +1,173 @@
+.root {
+    font-family: sans-serif;
+}
+
+.root *,
+.root *:before,
+.root *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.root .wrapper {
+    width: 1140px;
+    margin: 0 auto;
+    max-width: 100%;
+    padding: 0 15px;
+}
+
+.root .clearfix:after {
+    content: " ";
+    clear: both;
+    display: table;
+}
+
+.form1 {
+    padding: 0px 50px 55px;
+    max-width: 500px;
+    margin: 0 auto;
+    margin-bottom: 165px;
+}
+
+.form1 .header {
+    text-align: center;
+}
+
+.form1 .header .message {
+    margin: 25px 0 70px 0;
+    font-size: 15px;
+    font-weight: normal;
+    color: #262626;
+}
+
+.form1 .form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form1 .form .first {
+    margin-bottom: 5px;
+}
+.form1 .form .middle {
+    margin-bottom: 5px;
+}
+
+.form1 .form .second {
+    margin-bottom: 10px;
+
+}
+
+.form1 .form input {
+    height: 50px;
+    
+    width: 100%;
+    border: 1px solid #ddd;
+    padding: 15px;
+    background-color:#12a712
+}
+
+.form1 .form input:focus {
+    outline: 0;
+    box-shadow: none;
+    border-color: #25ad5e;
+}
+
+.form1 .form button {
+    font-size: 16px;
+    height: 50px;
+    display: inline-block;
+    cursor: pointer;
+    background: #12a712;
+    width: 100%;
+    border: 1px solid #12a712;
+    box-shadow: none;
+    color: #fff;
+    border-radius:25px;
+}
+
+.form1 .form button:hover {
+    background: #14ce3c;
+    background-color: #14ce3c;
+}
+
+.okay1 {
+    border-top: 1px solid #ddd;
+    margin-top: 30px;
+    padding-top: 45px;
+    padding-bottom: 45px;
+}
+
+.okay1 .brand {
+    float: left;
+    color: #1259a7;
+    cursor: pointer;
+    font-family: "Parisienne", cursive;
+    font-size: 42px;
+    font-weight: bold;
+    text-decoration: none;
+    padding-right: 50px;
+}
+
+.okay1 .copyright {
+    padding-top: 5px;
+    float: left;
+}
+
+.okay1 .copyright>div {
+    margin-bottom: 10px;
+}
+
+.okay1 .sns {
+    float: right;
+    padding-top: 12.5px;
+}
+
+.okay1 .sns>a {
+    width: 37px;
+    height: 37px;
+    line-height: 37px;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 50%;
+    text-align: center;
+    border: 1px solid #ddd;
+    margin-left: 5px;
+    text-decoration: none;
+}
+
+.okay1 .sns>a.fa-twitter {
+    background: #1e8ddf;
+    border-color: #1e8ddf;
+}
+
+.okay1 .sns>a.fa-facebook {
+    background: #33488b;
+    border-color: #33488b;
+}
+
+.okay1 .sns>a.fa-instagram {
+    background: #cc245f;
+    border-color: #cc245f;
+}
+
+@media(max-width:767px) {
+    .okay1 {
+        text-align: center;
+    }
+
+    .okay1 .brand {
+        float: none;
+        margin-bottom: 15px;
+        padding-right: 0;
+    }
+
+    .okay1 .copyright {
+        float: none;
+        margin: 15px 0 25px 0;
+    }
+
+    .okay1 .sns {
+        float: none;
+    }
+}
