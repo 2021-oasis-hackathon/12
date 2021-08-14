@@ -5,7 +5,6 @@ import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Date;
 

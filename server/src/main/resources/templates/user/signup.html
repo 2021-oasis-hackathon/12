@@ -9,9 +9,9 @@
     <div class="container">
         <form action="/signup" th:action="@{/signup}" th:object="${user}" method="post">
             <p>Username<input type="text" th:field="*{username}"/></p>
-            <p th:errors="*{username}"></p>
+            <small th:errors="*{username}"></small>
             <p>Password<input type="password" th:field="*{password}"/></p>
-            <p th:errors="*{password}"></p>
+            <small th:errors="*{password}"></small>
             <p><input type="submit" value="Signup"/></p>
         </form>
     </div>

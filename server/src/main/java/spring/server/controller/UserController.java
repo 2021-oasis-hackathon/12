@@ -15,6 +15,7 @@ import spring.server.token.JwtToken;
 import spring.server.validator.UserValidator;
 
 
+
 @Controller
 @RequiredArgsConstructor
 public class UserController {
@@ -51,9 +52,25 @@ public class UserController {
     }
 
     @PostMapping("/api/token-login")
-    public ResponseEntity<ApiMessage> tokenLoginProcess(@RequestBody JwtToken.Token token) {
-        LoginDTO loginInfo = userService.tokenLogin(token.getToken());
+    public ResponseEntity<ApiMessage> tokenLoginProcess(@RequestHeader("token") String token) {
+
+        LoginDTO loginInfo = userService.tokenLogin(token);
         return ResponseEntity.ok(ApiMessage.builder().data(loginInfo).message(loginInfo.getMessage()).build());
+    }
+
+    @GetMapping("/mypage/dispatcher")
+    public String dispatcher(@RequestParam("token") String token, Model model) {
+        String username = (String) JwtToken.parseJwtToken(token).get("username");
+        System.out.println(token);
+        Long userId = userService.findByUsername(username).getId();
+        return "redirect:/mypage/" + userId;
+    }
+
+    @GetMapping("/mypage/{userId}")
+    public String myPage(@PathVariable("userId") Long userId, Model model) {
+        User findUser = userService.findById(userId).orElseThrow(RuntimeException::new);
+        model.addAttribute("user", findUser.getUserDTO());
+        return "user/mypage";
     }
 
 }
