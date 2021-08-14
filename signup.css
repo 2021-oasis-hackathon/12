@@ -1,5 +1,10 @@
+@font-face {
+    font-family: 'ygd';
+    src: url("C:/Users/문지혜/Documents/GitHub/granola/윤고딕310.ttf");
+}
 .root {
     font-family: sans-serif;
+    font-family: 'ygd';
 }
 
 .root *,
@@ -39,6 +44,7 @@
     font-size: 15px;
     font-weight: normal;
     color: #262626;
+    border-bottom: #25ad5e 3px dotted;
 }
 
 .form1 .form label {
@@ -54,7 +60,7 @@
 }
 
 .form1 .form .second {
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 
 }
 
@@ -71,6 +77,45 @@
     outline: 0;
     box-shadow: none;
     border-color: #25ad5e;
+}
+
+.form1 .form {
+    margin: 0 -15px;
+}
+
+.form1 .form .item {
+    margin: 0px 0px 30px;
+    padding: 0 10px;
+}
+
+.form1 .form .item .title {
+    display: block;
+    margin-bottom: 12.5px;
+}
+
+.form1 .form .item .group input[type=checkbox] +label{
+    display:block;
+    margin:0.2em;
+}
+.form1 .form .item .group input[type=checkbox]{
+    display:none;
+}
+.form1 .form .item .group input[type=checkbox] +label:before{
+   content:'\2714';
+   border:0.1em solid #000;
+   border-radius:3px;
+   display:inline-block;
+   width:6%;
+   height:8%;
+   margin:5px;
+   margin-left:-13px;
+   color: transparent;
+}
+
+.form1 .form .item .group input[type=checkbox]:checked +label:before{
+    background-color:mediumseagreen ;
+    border-color: mediumseagreen;
+    color:#fff;
 }
 
 .form1 .form button {
@@ -151,7 +196,7 @@
     border-color: #cc245f;
 }
 
-@media(max-width:767px) {
+/*@media(max-width:767px) {
     .okay1 {
         text-align: center;
     }
@@ -170,4 +215,4 @@
     .okay1 .sns {
         float: none;
     }
-}
+}*/

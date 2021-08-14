@@ -73,25 +73,9 @@
     padding-bottom: 18px; 
     width:17%;
 }
-.form1 .form button {
-    font-size: 16px;
-    height: 50px;
-    display: inline-block;
-    cursor: pointer;
-    background: #12a712;
-    width: 100%;
-    border: 1px solid #12a712;
-    box-shadow: none;
-    color: #fff;
-    border-radius:25px;
-}
 
-.form1 .form button:hover {
-    background: #14ce3c;
-    background-color: #14ce3c;
-}
 
-.okay1 {
+/*.okay1 {
     border-top: 1px solid #ddd;
     margin-top: 30px;
     padding-top: 45px;
@@ -170,4 +154,4 @@
     .okay1 .sns {
         float: none;
     }
-}
+}*/
