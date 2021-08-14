@@ -48,7 +48,7 @@ public class LoadingActivity extends AppCompatActivity {
 
     }
     private void loginCheck() {
-        String token = tokenStore.getString("jwt", "");
+        String token = tokenStore.getString("token", "");
         if (token == "") {
             intentToLogin();
         } else {
@@ -63,23 +63,22 @@ public class LoadingActivity extends AppCompatActivity {
     private void intentToLogin() {
         Intent intent = new Intent(LoadingActivity.this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
     private void intentToMain() {
         Intent intent = new Intent(LoadingActivity.this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
     private void checkToken(String token) throws JSONException {
         if(AppHelper.requestQueue == null){
             AppHelper.requestQueue = Volley.newRequestQueue(getApplicationContext());
         }
         String url = "http://" + AppHelper.hostUrl + "/api/token-login";
-        Map data = new HashMap();
-        data.put("token", token);
-        JSONObject jsonObject = new JSONObject(data);
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST,
                 url,
-                jsonObject,
+                new JSONObject(),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -91,6 +90,7 @@ public class LoadingActivity extends AppCompatActivity {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            finish();
 //                            문제발생 종료
                         }
                     }
@@ -98,15 +98,16 @@ public class LoadingActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        finish();
 //                            문제발생 종료
                     }
                 }
         ) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String,String>();
-//                params.put("token", token);
-                return params;
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> header = new HashMap<>();
+                header.put("token", token);
+                return header;
             }
         };
         request.setShouldCache(false);

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import oasis.granola.locker.MainActivity;
 import oasis.granola.locker.R;
 
 public class Fragment2 extends Fragment {

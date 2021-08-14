@@ -163,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
     private void intentTo() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     final class JavascriptInterface {
@@ -170,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
         public void callAndroid(String token) {
             handler.post(new Runnable() {
                 public void run() {
-                    editor.putString("jwt", token);
+                    editor.putString("token", token);
                     editor.commit();
                     intentTo();
                 }
