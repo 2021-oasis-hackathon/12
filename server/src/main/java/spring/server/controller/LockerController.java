@@ -13,6 +13,7 @@ import spring.server.domain.User;
 import spring.server.dto.LockerDTO;
 import spring.server.service.LockerService;
 import spring.server.service.UserService;
+import spring.server.token.JwtToken;
 
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -48,7 +49,8 @@ public class LockerController {
 
     @GetMapping("/get")
     public ResponseEntity<ApiMessage> getLockers() {
-        List<Locker> lockers = lockerService.getLockers();
+//        List<Locker> lockers = lockerService.getLockers(user.getId());
+        List<Locker> lockers = lockerService.findAll();
         List<LockerDTO> collect = lockers.stream().map(locker -> locker.getLockerDTO())
                 .collect(Collectors.toList());
 

@@ -58,7 +58,6 @@ public class Fragment3 extends Fragment {
         initWebView();
         return view;
     }
-
     private void initWebView(){
         WebSettings webSettings = webView.getSettings();
         webSettings.setUserAgentString("Mozilla/5.0 AppleWebKit/535.19 Chrome/56.0.0 Mobile Safari/535.19");

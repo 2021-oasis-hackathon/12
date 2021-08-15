@@ -61,7 +61,6 @@ public class UserController {
     @GetMapping("/mypage/dispatcher")
     public String dispatcher(@RequestParam("token") String token, Model model) {
         String username = (String) JwtToken.parseJwtToken(token).get("username");
-        System.out.println(token);
         Long userId = userService.findByUsername(username).getId();
         return "redirect:/mypage/" + userId;
     }
