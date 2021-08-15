@@ -18,8 +18,11 @@ public class LockerService {
         lockerRepository.save(locker);
     }
 
-    public List<Locker> getLockers() {
-//        나중에 조건 넣어서 다 가져오진 않게
+    public List<Locker> getLockers(Long userId) {
+        return lockerRepository.findAllNotMine(userId);
+    }
+
+    public List<Locker> findAll() {
         return lockerRepository.findAll();
     }
 }

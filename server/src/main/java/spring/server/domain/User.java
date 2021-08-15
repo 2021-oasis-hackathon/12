@@ -8,6 +8,7 @@ import spring.server.dto.UserDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,8 @@ public class User {
     @NotEmpty
     @Column(unique = true)
     private String username; //login id
+    @NotNull
+    private String nickname;
     @NotEmpty
     private String password;
     private String token;
@@ -36,6 +39,6 @@ public class User {
     }
 
     public UserDTO getUserDTO() {
-        return new UserDTO(this.getId(), this.username);
+        return new UserDTO(this.getId(), this.getUsername(), this.getNickname());
     }
 }
