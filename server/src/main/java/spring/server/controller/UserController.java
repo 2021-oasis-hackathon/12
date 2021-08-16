@@ -1,6 +1,7 @@
 package spring.server.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +15,6 @@ import spring.server.service.UserService;
 import spring.server.token.JwtToken;
 import spring.server.validator.UserValidator;
 
-
-
 @Controller
 @RequiredArgsConstructor
 public class UserController {
@@ -26,6 +25,19 @@ public class UserController {
     @GetMapping("/login")
     public String login(Model model) {
         return "user/login";
+    }
+
+    @PostMapping("/api/logout")
+    public ResponseEntity<ApiMessage> logout(Model model, @RequestBody User getUser) {
+        try {
+            User user = userService.findById(getUser.getId()).orElseThrow();
+            user.setToken("");
+            userService.save(user);
+            return ResponseEntity.ok(ApiMessage.builder().data(true).message("success").build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    ApiMessage.builder().data(false).message("fail").build());
+        }
     }
 
     @GetMapping("/signup")

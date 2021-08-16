@@ -42,10 +42,40 @@
                 </button>
             </h2>
             <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                <div>
+                    <input type="hidden" id="userId" name="userId" th:value="*{id}">
+                    <input id="logout-btn" type="submit" value="로그아웃">
+                </div>
             </div>
         </div>
     </div>
 </div>
 </body>
+<script type="text/javascript">
+    $("#logout-btn").on("click", function (){
+        var userId = $("#userId").val();
+        $.ajax({
+            url:"/api/logout",
+            method:"post",
+            data: JSON.stringify({id:userId}),
+            contentType : "application/json; charset=utf-8",
+        }).
+        done(function(json) {
+            <!--성공, 실패 다 여기로 들어옴            -->
+            <!--android로 전달-->
+            if (json.data) {
+                callLogout();
+            }
+        })
+        .fail(function(xhr, status, error) {
+            console.log(error);
+            <!--서버상태 이상으로 데이터를 못가져오는 경우 알림            -->
+        })
+    })
+
+    function callLogout(){
+        window.myJSInterfaceName.callLogout();
+    }
+
+</script>
 </html>

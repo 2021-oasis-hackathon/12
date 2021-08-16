@@ -26,7 +26,6 @@
             contentType : "application/json; charset=utf-8",
         }).
         done(function(json) {
-            console.log(json);
             <!--성공, 실패 다 여기로 들어옴            -->
             <!--토큰 전달            -->
             <!--android로 전달-->
@@ -35,8 +34,6 @@
             }
         })
         .fail(function(xhr, status, error) {
-            console.log(xhr);
-            console.log(status);
             console.log(error);
             <!--서버상태 이상으로 데이터를 못가져오는 경우 알림            -->
         })

@@ -2,6 +2,7 @@ package oasis.granola.locker.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class Fragment3 extends Fragment {
     private String queryString;
     private WebView webView;
     SharedPreferences tokenStore;
+    Handler handler = new Handler();
 
     @Nullable
     @Override
@@ -179,6 +181,7 @@ public class Fragment3 extends Fragment {
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         webView.loadUrl(initialUrl + queryString);
+        webView.addJavascriptInterface(new JavascriptInterface(),"myJSInterfaceName");
     }
     public void js(WebView view, String code)
     {
@@ -194,5 +197,23 @@ public class Fragment3 extends Fragment {
         } else {
             view.loadUrl(javascriptCode);
         }
+    }
+
+    final class JavascriptInterface {
+        @android.webkit.JavascriptInterface
+        public void callLogout() {
+            handler.post(new Runnable() {
+                public void run() {
+                    intentTo();
+                }
+            });
+
+        }
+    }
+
+    private void intentTo() {
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 }
