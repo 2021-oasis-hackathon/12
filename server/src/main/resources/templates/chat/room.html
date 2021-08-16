@@ -309,7 +309,6 @@ button.accent {
     <h2>채팅방임</h2>
     <div id="chat-page">
         <div class="chat-container">
-            <input type="hidden" id="username" th:value="${user.nickname}">
             <div class="chat-header">
                 <h2>Spring WebSocket Chat Demo</h2>
             </div>
@@ -317,7 +316,21 @@ button.accent {
                 연결중...
             </div>
             <ul id="messageArea">
-
+                <li th:each="m : ${messages}" class="chat-message">
+                    <block th:if="${m.user.id} == ${user.id}">
+                        <i class="message-icon" th:text="${#strings.substring(m.user.nickname,0, 1)}"
+                           th:data-sender="${m.user.nickname}"></i>
+                        <span th:text="${m.user.nickname}"></span>
+                        <p th:text="${m.message}"></p>
+                    </block>
+                    <block th:unless="${m.user.id} == ${user.id}" style="display:flex; flex-direction:column;
+align-items:flex-end; padding-right:68px; position:relative">
+                        <i class="message-icon" th:text="${#strings.substring(m.user.nickname,0, 1)}"
+                           th:data-sender="${m.user.nickname}" style="right:10px; left:0px; margin-left:auto"></i>
+                        <span th:text="${m.user.nickname}"></span>
+                        <p th:text="${m.message}"></p>
+                    </block>
+                </li>
             </ul>
             <div id="messageForm" name="messageForm">
                 <div class="form-group">
@@ -332,14 +345,16 @@ button.accent {
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script type="text/javascript">
+<script th:inline="javascript">
+/*<![CDATA[*/
     var messageForm = document.querySelector('#messageForm');
     var messageInput = document.querySelector('#message');
     var messageArea = document.querySelector('#messageArea');
     var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
-var username = $("#username").val();
+
+var senderId = /*[[ ${user.id} ]]*/;
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -348,7 +363,9 @@ var colors = [
 const URLSearch = new URLSearchParams(location.search);;
 
     $(document).ready(function(){
-        console.log(URLSearch.get("id"));
+        $(".message-icon").each(function() {
+            $(this).css("background-color", getAvatarColor($(this).data("sender")));
+        })
         connect();
     });
 
@@ -368,7 +385,10 @@ const URLSearch = new URLSearchParams(location.search);;
         // Tell your username to the server
         stompClient.send("/pub/chat/message",
             {},
-            JSON.stringify({sender: username, type: 'JOIN', roomId: URLSearch.get("id")})
+            JSON.stringify({
+                senderId: senderId,
+                type: 'JOIN',
+                roomId: URLSearch.get("id")})
         )
 
         connectingElement.classList.add('hidden');
@@ -385,7 +405,7 @@ function sendMessage() {
     var messageContent = messageInput.value.trim();
     if(messageContent && stompClient) {
         var chatMessage = {
-            sender: username,
+            senderId: senderId,
             message: messageInput.value,
             type: 'CHAT',
             roomId: URLSearch.get("id")
@@ -403,22 +423,22 @@ function onMessageReceived(payload) {
 
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
-        message.message = message.sender + ' joined!';
+        message.message = message.user.nickname + ' joined!';
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
-        message.message = message.sender + ' left!';
+        message.message = message.user.nickname + ' left!';
     } else {
         messageElement.classList.add('chat-message');
 
         var avatarElement = document.createElement('i');
-        var avatarText = document.createTextNode(message.sender[0]);
+        var avatarText = document.createTextNode(message.user.nickname[0]);
         avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(message.sender);
+        avatarElement.style['background-color'] = getAvatarColor(message.user.nickname);
 
         messageElement.appendChild(avatarElement);
 
         var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.sender);
+        var usernameText = document.createTextNode(message.user.nickname);
         usernameElement.appendChild(usernameText);
         messageElement.appendChild(usernameElement);
     }
@@ -443,9 +463,9 @@ function getAvatarColor(messageSender) {
     return colors[index];
 }
 
-<!--messageForm.addEventListener('submit', sendMessage, true)-->
 $("#messageForm").on("click", function () {
     sendMessage();
 })
+/*]]*/
 </script>
 </html>

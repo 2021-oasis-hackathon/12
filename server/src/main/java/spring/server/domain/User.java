@@ -32,8 +32,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Locker> lockers = new ArrayList<>();
 
-
-
     public void passwordEncoding(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
     }

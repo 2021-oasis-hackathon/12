@@ -6,18 +6,27 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import spring.server.domain.ChatMessage;
+import spring.server.domain.User;
+import spring.server.repository.ChatMessageRepository;
+import spring.server.service.UserService;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
-
+    private final UserService userService;
+    private final ChatMessageRepository chatMessageRepository;
     private final SimpMessageSendingOperations messagingTemplate;
 
     @MessageMapping("/chat/message")
     public void message(@Payload ChatMessage message) {
-        if (ChatMessage.MessageType.JOIN.equals(message.getType())) {
-            message.setMessage(message.getSender() + "님이 입장하셨습니다.");
+        if (!ChatMessage.MessageType.JOIN.equals(message.getType())) {
+//            message.setMessage(message.getSender() + "님이 입장하셨습니다.");
+            User user = userService.findById(message.getSenderId()).orElseThrow(RuntimeException::new);
+            message.setUser(user.getUserDTO());
+            chatMessageRepository.save(message);
+            messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
         }
-        messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 }

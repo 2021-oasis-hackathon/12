@@ -5,11 +5,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import spring.server.domain.ChatMessage;
 import spring.server.domain.ChatRoom;
 import spring.server.domain.User;
+import spring.server.repository.ChatMessageRepository;
 import spring.server.service.ChatService;
 import spring.server.service.UserService;
 import spring.server.token.JwtToken;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -18,6 +23,7 @@ import spring.server.token.JwtToken;
 public class ChatRoomController {
     private final ChatService chatService;
     private final UserService userService;
+    private final ChatMessageRepository chatMessageRepository;
 
     @GetMapping("/rooms/dispatcher")
     public String dispatcher(@RequestParam("token") String token, Model model) {
@@ -46,16 +52,17 @@ public class ChatRoomController {
             ChatRoom chatRoom = chatService.createChatRoom(user, host);
             roomId = chatRoom.getId();
         }
-        redirectAttributes.addAttribute("user" , user);
+        redirectAttributes.addAttribute("userId" , userId);
 
         return "redirect:/chat/room/enter?id=" + roomId;
     }
     // 채팅방 입장 화면
     @GetMapping("/room/enter")
     public String roomDetail(Model model, @RequestParam("id") Long roomId
-            , @RequestParam("user") User user) {
-//        chatService.findMessageByRoomId(roomId);
-//        model.addAttribute("messages", messages);
+            , @RequestParam("userId") Long userId) {
+        List<ChatMessage> messages = chatMessageRepository.findByRoomId(roomId);
+        User user = userService.findById(userId).orElseThrow(RuntimeException::new);
+        model.addAttribute("messages", messages);
         model.addAttribute("user", user);
         return "/chat/room";
     }

@@ -7,21 +7,22 @@
 </head>
 <body>
     <h2>채팅방 리스트</h2>
-    <form action="/chat/room" method="post">
+    <form id="createForm" action="/chat/room" method="post">
         <input type="submit" id="create" style="display:none" value="채팅방 생성">
         <input type="hidden" id="userId" name="userId" th:value="${userId}">
         <input type="hidden" id="hostId" name="hostId" value="hostId">
     </form>
     <tbody>
     <tr th:each="i: ${list}">
-        <a th:href="|/chat/room/enter?id=${i.id}|" th:text="${i.name}"></a>
+        <a th:href="|/chat/room/enter?id=${i.id}&userId=${userId}|" th:text="${i.name}"></a>
     </tr>
     </tbody>
 </body>
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
+
     function clickCreateRoom(hostId){
         $("#hostId").val(hostId);
-        $("#create").click();
+        $("#createForm").submit();
     }
 </script>
 </html>

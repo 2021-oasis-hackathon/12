@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
-    @Query("select c from UserChatRoom u INNER JOIN u.chatRoom c where u.user.id = :userId")
+    @Query("select distinct c from UserChatRoom u INNER JOIN u.chatRoom c where u.user.id = :userId")
     List<ChatRoom> findRoomByUserId(@Param("userId") Long userId);
 
     @Query("select distinct c from UserChatRoom u inner join u.chatRoom c where u.user.id = :userId and u.otherId = :otherId")
