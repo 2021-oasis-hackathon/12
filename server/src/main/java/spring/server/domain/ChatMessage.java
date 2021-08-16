@@ -5,6 +5,8 @@ import lombok.Setter;
 import spring.server.dto.UserDTO;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter @Setter
 @Entity
@@ -20,6 +22,7 @@ public class ChatMessage {
     private MessageType type;
     private Long roomId;
     private Long senderId;
+    private LocalDateTime createTime;
 
     @Embedded
     private UserDTO user;

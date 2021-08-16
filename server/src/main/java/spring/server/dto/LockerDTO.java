@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,4 +21,5 @@ public class LockerDTO {
     private Double latitude;
     private Double longitude;
     private Long userId;
+
 }

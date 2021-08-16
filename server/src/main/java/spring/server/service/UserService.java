@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import spring.server.domain.Locker;
 import spring.server.domain.User;
 import spring.server.dto.LoginDTO;
 import spring.server.repository.UserRepository;
@@ -64,6 +65,11 @@ public class UserService{
     }
 
     public void save(User user) {
+        userRepository.save(user);
+    }
+
+    public void entrust(User user, Locker locker) {
+        user.entrust(locker);
         userRepository.save(user);
     }
 }

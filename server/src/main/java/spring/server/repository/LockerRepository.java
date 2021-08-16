@@ -12,4 +12,10 @@ import java.util.List;
 public interface LockerRepository extends JpaRepository<Locker, Long> {
     @Query("select l from Locker l where l.user.id != :userId")
     List<Locker> findAllNotMine(@Param("userId") Long userId);
+
+    @Query("select l from Locker l where l.user.id = :userId")
+    List<Locker> findByUserId(@Param("userId") Long userId);
+
+    @Query("select l from Locker l where l.qrcode = :qrcode")
+    Locker findByQrcode(@Param("qrcode") String qrcode);
 }

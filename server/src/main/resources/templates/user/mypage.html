@@ -18,6 +18,11 @@
             <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                 <div class="accordion-body">
                     <a href="/locker/register" th:href="|@{/locker/register/}*{id}|">보관소 등록</a>
+                    <ul>
+                        <li th:each="l : ${lockers}">
+                            <a th:href="|/locker/info/${l.id}|" th:text="${l.lockerName}"></a>
+                        </li>
+                    </ul>
 <!--                    + 보관소 리스트에 수정, 삭제-->
                 </div>
                 <div class="accordion-body">

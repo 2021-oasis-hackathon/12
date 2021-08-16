@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -20,7 +21,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
@@ -29,8 +29,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.sql.DriverManager.println;
-
 public class LoadingActivity extends AppCompatActivity {
     private final int PERMISSIONS_REQUEST_RESULT = 1;
     SharedPreferences tokenStore;
@@ -38,7 +36,7 @@ public class LoadingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.loading_activity);
+        setContentView(R.layout.activity_loading);
 
         tokenStore = getSharedPreferences("tokenStore", MODE_PRIVATE);
 //        권한 체크 -> 로그인 체크
@@ -96,6 +94,7 @@ public class LoadingActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
                         finish();
 //                            문제발생 종료
                     }
@@ -112,12 +111,18 @@ public class LoadingActivity extends AppCompatActivity {
         AppHelper.requestQueue.add(request);
     }
     private void permissionCheck(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
             //Manifest.permission.ACCESS_FINE_LOCATION 접근 승낙 상태 일때
             loginCheck();
         } else{
             //Manifest.permission.ACCESS_FINE_LOCATION 접근 거절 상태 일때
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},PERMISSIONS_REQUEST_RESULT);
+            ActivityCompat.requestPermissions(
+                    this,new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                            , Manifest.permission.ACCESS_COARSE_LOCATION
+                            , Manifest.permission.CAMERA},PERMISSIONS_REQUEST_RESULT);
         }
     }
 

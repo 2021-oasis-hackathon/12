@@ -41,7 +41,6 @@ public class Fragment2 extends Fragment {
         View view = inflater.inflate(R.layout.fragment2, container, false);
         webView = (WebView) view.findViewById(R.id.webView);
         tokenStore = getActivity().getSharedPreferences("tokenStore", MODE_PRIVATE);
-
         String token = tokenStore.getString("token", null);
         if (token != null) {
             queryString = "?token=" + token;
@@ -49,6 +48,8 @@ public class Fragment2 extends Fragment {
         initWebView();
         return view;
     }
+
+
     private void initWebView(){
         WebSettings webSettings = webView.getSettings();
         webSettings.setUserAgentString("Mozilla/5.0 AppleWebKit/535.19 Chrome/56.0.0 Mobile Safari/535.19");
