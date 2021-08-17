@@ -22,7 +22,7 @@ public class User {
     @NotEmpty
     @Column(unique = true)
     private String username; //login id
-    @NotNull
+    @NotEmpty
     private String nickname;
     @NotEmpty
     private String password;
