@@ -3,6 +3,8 @@ package oasis.granola.locker.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -40,14 +42,21 @@ import java.util.Map;
 
 import oasis.granola.locker.AppHelper;
 import oasis.granola.locker.CustomDialog;
+import oasis.granola.locker.LoginActivity;
 import oasis.granola.locker.MainActivity;
 import oasis.granola.locker.R;
+import oasis.granola.locker.ScanActivity;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class Fragment1 extends Fragment {
 
     private MapView mapView;
     private int hostId;
 
+    private SharedPreferences tokenStore;
+    private String token;
+    private Boolean isEntrust = false;
     private boolean firstGetLocationFlag;
 
     Dialog customDialog;
@@ -56,6 +65,7 @@ public class Fragment1 extends Fragment {
     private double currLatitude = 36.7960209;
     private double currLongitude = 127.1314041;
     private MapView.POIItemEventListener markerClickListner;
+    private MapView.MapViewEventListener mapMoveListner;
 
     @Nullable
     @Override
@@ -63,6 +73,8 @@ public class Fragment1 extends Fragment {
         View view = inflater.inflate(R.layout.fragment1, container, false);
 
         firstGetLocationFlag = true;
+        tokenStore = getActivity().getSharedPreferences("tokenStore", MODE_PRIVATE);
+        token = tokenStore.getString("token", null);
 
         customDialog = new CustomDialog((MainActivity)getActivity());
         customDialog.setContentView(R.layout.locker_dialog);
@@ -72,11 +84,13 @@ public class Fragment1 extends Fragment {
         ViewGroup mapViewContainer = (ViewGroup) view.findViewById(R.id.map_view);
         ImageView btn = (ImageView) view.findViewById(R.id.moveBtn);
         mapViewContainer.addView(mapView);
-//        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(36.7960209 , 127.1314041), true);
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 
 
         markerClickListner = new MarkerClickListner();
+        mapMoveListner = new MapMoveListner();
         mapView.setPOIItemEventListener(markerClickListner);
+        mapView.setMapViewEventListener(mapMoveListner);
 
         btn.setOnClickListener(new clickListner());
         GPSListener gpsListener = new GPSListener();
@@ -98,7 +112,7 @@ public class Fragment1 extends Fragment {
             currLongitude = longitude;
             if (firstGetLocationFlag) {
 //                여기서 주변 보관소 정보 가져옴
-                getLockers();
+                getLockers(token);
                 firstGetLocationFlag = !firstGetLocationFlag;
                 mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude), true);
                 mapView.setZoomLevel(4, true);
@@ -106,18 +120,6 @@ public class Fragment1 extends Fragment {
                 customDialog.show();
                 customDialog.cancel();
             }
-
-                //마커 찍기
-                MapPoint MARKER_POINT = MapPoint.mapPointWithGeoCoord(latitude, longitude);
-                MapPOIItem marker = new MapPOIItem();
-
-                marker.setItemName("Default Marker");
-                marker.setTag(-1);
-                marker.setMapPoint(MARKER_POINT);
-                marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-                marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-
-                mapView.addPOIItem(marker);
         }
 
         @Override
@@ -136,11 +138,11 @@ public class Fragment1 extends Fragment {
         }
     }
 
-    public void getLockers() {
+    public void getLockers(String token) {
         if(AppHelper.requestQueue == null){
             AppHelper.requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         }
-        String url = "http://" + AppHelper.hostUrl + "/locker/get";
+        String url = "http://" + AppHelper.hostUrl + "/locker/get?token=" + token;
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -149,22 +151,18 @@ public class Fragment1 extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONArray data = response.getJSONArray("data");
-                            for (int i = 0; i < data.length(); i++) {
-                                JSONObject o = (JSONObject) data.get(i);
-                                double latitude = o.getDouble("latitude");
-                                double longitude = o.getDouble("longitude");
+                            JSONObject data = response.getJSONObject("data");
+                            JSONArray list = data.getJSONArray("lockers");
+                            isEntrust = data.getBoolean("entrust");
 
-                                MapPoint MARKER_POINT = MapPoint.mapPointWithGeoCoord(latitude, longitude);
-                                MapPOIItem marker = new MapPOIItem();
-                                marker.setItemName("Default Marker");
-                                marker.setTag(i);
-                                marker.setMapPoint(MARKER_POINT);
-                                marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-                                marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-                                marker.setUserObject(o);
-
-                                mapView.addPOIItem(marker);
+                            if (isEntrust) {
+                                JSONObject o = (JSONObject) list.get(0);
+                                setMarker(o, 0, true);
+                            } else {
+                                for (int i = 0; i < list.length(); i++) {
+                                    JSONObject o = (JSONObject) list.get(i);
+                                    setMarker(o, i, false);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -175,6 +173,7 @@ public class Fragment1 extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        getActivity().finish();
 //                            정보 못읽어옴 알림
                     }
                 }
@@ -182,6 +181,7 @@ public class Fragment1 extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
+                params.put("token", token);
                 return params;
             }
         };
@@ -189,27 +189,105 @@ public class Fragment1 extends Fragment {
         AppHelper.requestQueue.add(request);
     }
 
+    public void setMarker(JSONObject o, int index, boolean entrust) {
+        double latitude = 0;
+        double longitude = 0;
+        String name = "";
+
+        try {
+            latitude = o.getDouble("latitude");
+            longitude = o.getDouble("longitude");
+            name = o.getString("lockerName");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MapPoint MARKER_POINT = MapPoint.mapPointWithGeoCoord(latitude, longitude);
+        MapPOIItem marker = new MapPOIItem();
+        marker.setItemName(name);
+        marker.setTag(index);
+        marker.setMapPoint(MARKER_POINT);
+
+        marker.setMarkerType((entrust) ? MapPOIItem.MarkerType.RedPin : MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
+        marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+        marker.setUserObject(o);
+
+        mapView.addPOIItem(marker);
+    }
+
     class clickListner implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
             mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(currLatitude, currLongitude), true);
-            mapView.setZoomLevel(2, true);
+            mapView.setZoomLevel(4, true);
+            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
         }
     }
+
+    class MapMoveListner implements MapView.MapViewEventListener {
+
+        @Override
+        public void onMapViewInitialized(MapView mapView) {
+
+        }
+
+        @Override
+        public void onMapViewCenterPointMoved(MapView mapView, MapPoint mapPoint) {
+            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+        }
+
+        @Override
+        public void onMapViewZoomLevelChanged(MapView mapView, int i) {
+
+        }
+
+        @Override
+        public void onMapViewSingleTapped(MapView mapView, MapPoint mapPoint) {
+
+        }
+
+        @Override
+        public void onMapViewDoubleTapped(MapView mapView, MapPoint mapPoint) {
+
+        }
+
+        @Override
+        public void onMapViewLongPressed(MapView mapView, MapPoint mapPoint) {
+
+        }
+
+        @Override
+        public void onMapViewDragStarted(MapView mapView, MapPoint mapPoint) {
+
+        }
+
+        @Override
+        public void onMapViewDragEnded(MapView mapView, MapPoint mapPoint) {
+
+        }
+
+        @Override
+        public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
+
+        }
+    }
+
 
     class MarkerClickListner implements MapView.POIItemEventListener {
 
         @Override
         public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
-            if (mapPOIItem.getTag() == -1) {
-                return;
-            }
             TextView dialogName = (TextView)customDialog.findViewById(R.id.locker_name);
             TextView dialogAddress = (TextView)customDialog.findViewById(R.id.locker_address);
             TextView dialogAddressDetail = (TextView)customDialog.findViewById(R.id.locker_address_detail);
             Button chatBtn = (Button) customDialog.findViewById(R.id.btnChat);
             chatBtn.setOnClickListener(chatClickListener);
+            Button entrustBtn = (Button) customDialog.findViewById(R.id.btnEntrust);
+            entrustBtn.setOnClickListener(entrustClickListner);
+            if (isEntrust) {
+                entrustBtn.setText("되찾기");
+            }
 
             JSONObject lockerInfo = (JSONObject) mapPOIItem.getUserObject();
             try {
@@ -256,6 +334,16 @@ public class Fragment1 extends Fragment {
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bnv_main);
             bottomNavigationView.setSelectedItemId(R.id.second);
             ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment2 ).commit();
+        }
+    };
+
+    public View.OnClickListener entrustClickListner = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getActivity(), ScanActivity.class);
+            intent.putExtra("isEntrust", isEntrust);
+            startActivity(intent);
+            getActivity().finish();
         }
     };
 }

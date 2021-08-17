@@ -24,10 +24,8 @@
 }
 
 .form1 {
-    padding: 0px 50px 55px;
     max-width: 500px;
     margin: 0 auto;
-    margin-bottom: 165px;
 }
 
 .form1 .header {
@@ -47,21 +45,29 @@
 }
 
 .form1 .form .first {
+    background-image:url("../img/맡기랑께_회원가입_아이디_로그인.png");
+    background-size:contain;
+    background-repeat:no-repeat;
+    height:65px;
     margin-bottom: 5px;
 }
 
 .form1 .form .second {
+    background-image:url("../img/맡기랑께_회원가입_비번.png");
+    background-size:contain;
+    background-repeat:no-repeat;
+    height:65px;
     margin-bottom: 10px;
 
 }
 
 .form1 .form input {
-    height: 50px;
-    
+    height: 100%;
     width: 100%;
-    border: 1px solid #ddd;
-    padding: 15px;
-    background-color:#12a712
+    border: 0px solid #ddd;
+    padding: 15px 10px 15px 55px;
+    background-color: transparent;
+    color: white;
 }
 
 .form1 .form input:focus {
@@ -71,7 +77,8 @@
 }
 .form1 .form .signup img{
     padding-bottom: 18px; 
-    width:17%;
+    width:18%;
+    margin-left: 18px;
 }
 
 

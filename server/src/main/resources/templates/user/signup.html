@@ -4,18 +4,43 @@
     <meta charset="UTF-8">
     <title>Signup</title>
     <div th:replace="/fragments/header.html :: header"></div>
+    <link rel="stylesheet" th:href="@{/css/signup.css}">
 </head>
 <body>
-    <div class="container">
-        <form action="/signup" th:action="@{/signup}" th:object="${user}" method="post">
-            <p>Username<input type="text" th:field="*{username}"/></p>
-            <small th:errors="*{username}"></small>
-            <p>Password<input type="password" th:field="*{password}"/></p>
-            <small th:errors="*{password}"></small>
-            <p>이름<input type="text" th:field="*{nickname}"/></p>
-            <small th:errors="*{nickname}"></small>
-            <p><input type="submit" value="Signup"/></p>
+<div class="root container px-0" >
+    <div class="top"><img th:src="@{/img/top.png}" style="width:100%;"></div>
+    <div class="form1">
+        <div class="header">
+            <div class="brand"><img th:src="@{/img/맡기랑께.PNG}" style="margin-top:40px;margin-bottom: 40px;width: 70%;"></div>
+        </div>
+        <form class="form w-100 d-flex" action="/signup" th:action="@{/signup}" th:object="${user}" method="post"
+        style="margin-top:100px;">
+
+            <div class="group" style="width:68%">
+
+            <img th:src="@{/img/signup2.png}" style="width:34%; padding-left:15px">
+                <div class="first">
+                    <input type="text" th:field="*{username}" placeholder="id" required/>
+                </div>
+                <div class="middle">
+                    <input type="text" th:field="*{nickname}" placeholder="이름" required/>
+                </div>
+                <div class="second">
+                    <input type="password" th:field="*{password}" placeholder="password" required/>
+                </div>
+            </div>
+
+            <div class="align-self-center p-4">
+                <img id="submit" th:src="@{/img/맡기랑께_회원가입_완료버튼.png}" style="width:60px; align-self:center">
+                <input id="form-submit" type="submit" style="display:none"/>
+            </div>
         </form>
     </div>
+</div>
 </body>
+<script type="text/javascript">
+    $("#submit").on("click", function() {
+        $("#form-submit").click();
+    })
+</script>
 </html>
