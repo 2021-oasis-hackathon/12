@@ -1,0 +1,55 @@
+html,body{
+    margin:0; height:0;
+    width:100%; height:100%;
+}
+
+.root {
+    font-family: sans-serif;
+    height:100%;
+}
+
+.root *,
+.root *:before,
+.root *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.root .clearfix:after {
+    content: " ";
+    clear: both;
+    display: table;
+}
+
+.header img.bell{
+    width: 7%;
+    position: absolute;
+    right: 8%;
+    top: 75px;
+}
+.header img.bar{
+    width: 100%;
+    position: absolute;
+    top: 21%;
+}
+
+.header .group li{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    top: 47%;
+    left:45px;
+}
+
+.footer{
+    background: #fff;
+    position:fixed;   
+    left:0; width:100%; bottom: 0;
+}
+.footer li{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
