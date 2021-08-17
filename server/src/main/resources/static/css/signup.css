@@ -51,24 +51,40 @@
 }
 
 .form1 .form .first {
+    background-image:url("../img/맡기랑께_회원가입_아이디.png");
+    background-size:contain;
+    background-repeat:no-repeat;
+    height:65px;
     margin-bottom: 5px;
 }
 .form1 .form .middle {
+    background-image:url("../img/맡기랑께_회원가입_이메일.png");
+    background-size:contain;
+    background-repeat:no-repeat;
+    height:65px;
     margin-bottom: 5px;
 }
 
 .form1 .form .second {
+    background-image:url("../img/맡기랑께_회원가입_비번.png");
+    background-size:contain;
+    background-repeat:no-repeat;
+    height:65px;
     margin-bottom: 0px;
 
 }
 
 .form1 .form input {
-    height: 50px;
-    
+    height: 100%;
     width: 100%;
-    border: 1px solid #ddd;
-    padding: 15px;
-    background-color:#12a712
+    border: 0px solid #ddd;
+    padding: 15px 10px 15px 55px;
+    background-color:transparent;
+    color:white;
+}
+
+.form1 .form input::placeholder {
+    color:white;
 }
 
 .form1 .form input:focus {
