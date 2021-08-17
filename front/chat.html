@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" />
+    <script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <style>
+        @font-face{
+            src: url('../font/윤고딕310.ttf');
+            font-family:"ygd";
+        }
+        .chat_wrap{
+            font-family:"ygd";
+        }
+        .chat_wrap{ width:363px; padding:5px; font-size: 13px; color:#333;}
+        .chat_wrap .inner{background-color: #fff; border-radius: 5px; padding: 10px;}
+        .chat_wrap .item{margin-top:15px;}
+        .chat_wrap .item:first-child{margin-top: 0px;}
+        .chat_wrap .item .box{display: inline-block;max-width:180px; position:relative}
+        .chat_wrap .item .box .msg1{background-color: #fff; color: black ; border: 1px solid #999; border-radius: 20px; padding:10px 20px; text-align: left; margin-bottom:10%;}
+        .chat_wrap .item .box .time{font-size: 11px; color:#999; position:absolute; right:-75px; bottom:0; width:70px;}
+        .chat_wrap .item.mymsg{text-align: right;}
+        .chat_wrap .item.mymsg .box .time{right:auto; left:-75px;}
+        .chat_wrap .item.mymsg .box .msg{background:rgb(31, 177, 31); border:none; color:#fff; border-radius: 20px; padding:10px 20px; text-align: left;}
+        .chat_wrap .item .box{transition: all .3s ease-out; margin:0 0 0 20px;}
+        .chat_wrap .item.mymsg .box{margin:0 20px 0 0;}
+        input[type="text"]{border:0;; width:80%; background: #fff; border-radius: 20px; height:30px; padding-left:5px; box-sizing:border-box; margin-top:5px; position: relative; left:9%; bottom:3px}
+        input[type="text"]::placeholder{color:#999}
+    </style>
+    <script>
+        $(function(){
+            $("input[type='text']").keypress(function(e){
+                if(e.keyCode ==13 && $(this).val().length){
+                    var _val = $(this).val();
+                    var _class= $(this).attr("class");
+                    $(this).val('');
+                    var _tar = $(".chat_wrap .inner").append('<div class="item '+_class+'"><div class="box"><p class="msg">'+_val+'</p><span class="time">'+currentTime()+'</span></div></div>')
+                }
+            })
+        });
+
+        var currentTime = function(){
+            var date = new Date();
+            var hh = date.getHours();
+            var mm = date.getMinutes();
+            var apm = hh > 12 ? "PM":"AM";
+            var ct =  hh + ":"+mm+ " "+apm;
+            return ct;
+        }
+    </script>
+</head>
+<body >
+    <div class="root">
+        <div class="header">
+            <div class="img-wrap">
+                <img src="C:\Users\문지혜\Documents\GitHub\granola\img\message\01_메세지 아이콘.png" style="width:100%; position:absolute;">
+                <a href="message.html"><img class="logo" src="C:\Users\문지혜\Documents\GitHub\granola\img\chat\001_메세지 아이콘.png" style="width:25%; position:relative; top:88px;left:25px;"></a>
+                <img src="C:\Users\문지혜\Documents\GitHub\granola\img\chat\02_채팅방.png" style="width:6%; position:relative; top:88px; left: 212px">
+                <img src="C:\Users\문지혜\Documents\GitHub\granola\img\chat\03_채팅방.png" style="width:6%; position:relative; top:84px; left: 238px">
+                
+            </div>
+        </div>
+    </div>
+    <div class="chat_wrap" style="margin-top: 23%; width:97%;">
+        <img src="C:\Users\문지혜\Documents\GitHub\granola\img\chat\04_채팅방.png" style="width:100%">
+        <div class="inner" >
+            <div class="item">
+                <img src="C:\Users\문지혜\Documents\GitHub\granola\img\chat\05_채팅방-1.png" style="width:10%; position:relative;top:10px;left: 10px;">
+                <div class="box">
+                    <p class="msg1">안녕하세요</p>
+                    <span class="time">10:05 PM</span>
+                </div>
+            </div>
+
+            <div class="item mymsg">
+                <div class="box">
+                    <p class="msg">안녕하세요</p>
+                    <span class="time">10:05 PM</span>
+                </div>
+            </div>
+
+        </div>
+    <div class="footer" style="background-color: #ddd;">
+        <img src="C:\Users\문지혜\Documents\GitHub\granola\img\chat\08_채팅방.png" style="width:6%; position:relative; left:25px; top:6px">
+        <input type="text" class="mymsg" placeholder="내용 입력">
+        <img src="C:\Users\문지혜\Documents\GitHub\granola\img\chat\09_채팅방.png" style="width:6%; position:relative; top:6px"
+    </div>
+    </div>
+</body>
+</html>
