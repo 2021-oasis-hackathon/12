@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'ygd';
-    src: url("C:/Users/문지혜/Documents/GitHub/granola/윤고딕310.ttf");
+    src: url("../font/윤고딕310.ttf");
 }
 .root {
     font-family: sans-serif;
@@ -29,10 +29,8 @@
 }
 
 .form1 {
-    padding: 0px 50px 55px;
     max-width: 500px;
     margin: 0 auto;
-    margin-bottom: 165px;
 }
 
 .form1 .header {
@@ -79,9 +77,6 @@
     border-color: #25ad5e;
 }
 
-.form1 .form {
-    margin: 0 -15px;
-}
 
 .form1 .form .item {
     margin: 0px 0px 30px;

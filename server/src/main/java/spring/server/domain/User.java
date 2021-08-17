@@ -26,6 +26,8 @@ public class User {
     private String nickname;
     @NotEmpty
     private String password;
+    private String email;
+    private String phoneNumber;
     private String token;
 
     @JsonIgnore
