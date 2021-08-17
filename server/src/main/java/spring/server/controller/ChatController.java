@@ -10,6 +10,8 @@ import spring.server.domain.User;
 import spring.server.repository.ChatMessageRepository;
 import spring.server.service.UserService;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class ChatController {
 //            message.setMessage(message.getSender() + "님이 입장하셨습니다.");
             User user = userService.findById(message.getSenderId()).orElseThrow(RuntimeException::new);
             message.setUser(user.getUserDTO());
+            message.setCreateTime(LocalDateTime.now());
             chatMessageRepository.save(message);
             messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
         }

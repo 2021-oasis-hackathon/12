@@ -9,16 +9,21 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 import spring.server.api.ApiMessage;
+import spring.server.domain.Locker;
 import spring.server.domain.User;
 import spring.server.dto.LoginDTO;
+import spring.server.service.LockerService;
 import spring.server.service.UserService;
 import spring.server.token.JwtToken;
 import spring.server.validator.UserValidator;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final LockerService lockerService;
     private final SmartValidator smartValidator;
     private final UserValidator userValidator;
 
@@ -80,7 +85,9 @@ public class UserController {
     @GetMapping("/mypage/{userId}")
     public String myPage(@PathVariable("userId") Long userId, Model model) {
         User findUser = userService.findById(userId).orElseThrow(RuntimeException::new);
+        List<Locker> lockers = lockerService.findByUserId(findUser.getId());
         model.addAttribute("user", findUser.getUserDTO());
+        model.addAttribute("lockers", lockers);
         return "user/mypage";
     }
 

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LockerInfo</title>
+    <div th:replace="/fragments/header.html :: header"></div>
+</head>
+<body>
+    <div id="qrcode"></div>
+</body>
+<script type="text/javascript" th:src="@{/js/qrcode.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+    var qrcode = /*[[ ${locker.qrcode} ]]*/
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+        text: qrcode,
+        width: 128,
+        height: 128,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+
+/*]]*/
+</script>
+</html>
