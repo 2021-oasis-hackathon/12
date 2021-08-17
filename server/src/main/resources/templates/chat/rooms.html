@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
+<div th:replace="/fragments/header.html :: header"></div>
+<head>
+    <meta charset="UTF-8">
+    <title>RoomList</title>
+</head>
+<body>
+    <h2>채팅방 리스트</h2>
+    <form id="createForm" action="/chat/room" method="post">
+        <input type="submit" id="create" style="display:none" value="채팅방 생성">
+        <input type="hidden" id="userId" name="userId" th:value="${userId}">
+        <input type="hidden" id="hostId" name="hostId" value="hostId">
+    </form>
+    <tbody>
+    <tr th:each="i: ${list}">
+        <a th:href="|/chat/room/enter?id=${i.id}&userId=${userId}|" th:text="${i.name}"></a>
+    </tr>
+    </tbody>
+</body>
+<script type="text/javascript" th:inline="javascript">
+
+    function clickCreateRoom(hostId){
+        $("#hostId").val(hostId);
+        $("#createForm").submit();
+    }
+</script>
+</html>

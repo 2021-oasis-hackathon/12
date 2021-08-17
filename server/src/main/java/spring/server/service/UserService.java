@@ -1,7 +1,6 @@
 package spring.server.service;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +9,8 @@ import spring.server.domain.User;
 import spring.server.dto.LoginDTO;
 import spring.server.repository.UserRepository;
 import spring.server.token.JwtToken;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,6 +36,9 @@ public class UserService{
     }
 
     public LoginDTO tokenLogin(String token) {
+        if (token == null) {
+            return new LoginDTO(false, "전달받은 토큰이 없습니다.", null);
+        }
         Claims claims = JwtToken.parseJwtToken(token);
         User findUser = userRepository.findByUsername((String) claims.get("username"));
         if (findUser == null) {
@@ -43,7 +47,7 @@ public class UserService{
         if (findUser.getToken().equals(token)) {
             return new LoginDTO(true, "로그인 성공", token);
         }
-        return new LoginDTO(false, "토큰이 문제가 있어 로그인에 실패했습니다.", null);
+        return new LoginDTO(false, "토큰에 문제가 있어 로그인에 실패했습니다.", null);
     }
 
     public void create(User user) {
@@ -53,5 +57,13 @@ public class UserService{
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
     }
 }

@@ -1,13 +1,9 @@
 package oasis.granola.locker;
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -20,26 +16,25 @@ import oasis.granola.locker.fragment.Fragment3;
 
 public class MainActivity extends AppCompatActivity {
 
-        // FrameLayout에 각 메뉴의 Fragment를 바꿔 줌
+    // FrameLayout에 각 메뉴의 Fragment를 바꿔 줌
         private FragmentManager fragmentManager = getSupportFragmentManager();
+        private FragmentTransaction transaction;
         // 4개의 메뉴에 들어갈 Fragment들
         private Fragment1 frag1 = new Fragment1();
         private Fragment2 frag2 = new Fragment2();
         private Fragment3 frag3 = new Fragment3();
-
         private BottomNavigationView bottomNavigationView;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
-
             bottomNavigationView = findViewById(R.id.bnv_main);
 
             doNavigate();
         }
         private void doNavigate() {
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.frame_layout, frag1).commitAllowingStateLoss();
 
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
