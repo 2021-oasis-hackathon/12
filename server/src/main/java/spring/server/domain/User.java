@@ -9,6 +9,11 @@ import spring.server.dto.UserDTO;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +42,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "entrust_locker_id")
     private Locker entrustLocker;   //내가 짐을 맡긴 보관소
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime entrustTime;
 
     public void passwordEncoding(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
@@ -49,5 +56,11 @@ public class User {
     public void entrust(Locker locker) {
         this.setEntrustLocker(locker);
         locker.addCustomer(this);
+    }
+
+    public int getLockerUsedTime() {
+        Duration duration = Duration.between(entrustTime, LocalDateTime.now());
+        long minute = duration.getSeconds() / 60;
+//        long hour =
     }
 }
