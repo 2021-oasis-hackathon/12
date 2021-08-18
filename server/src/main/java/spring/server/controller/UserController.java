@@ -87,6 +87,7 @@ public class UserController {
         User findUser = userService.findById(userId).orElseThrow(RuntimeException::new);
         List<Locker> lockers = lockerService.findByUserId(findUser.getId());
         model.addAttribute("user", findUser.getUserDTO());
+        model.addAttribute("entrustLocker", findUser.getEntrustLocker());
         model.addAttribute("lockers", lockers);
         return "user/mypage";
     }

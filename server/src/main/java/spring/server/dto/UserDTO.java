@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import spring.server.domain.Locker;
 
 import javax.persistence.Embeddable;
 

@@ -78,6 +78,12 @@ public class LockerController {
         model.addAttribute("locker", locker);
         return "/locker/info";
     }
+    @GetMapping("/storage")
+    public String myLocker(Model model, @PathVariable("id") Long id) {
+        Locker locker = lockerService.findById(id).orElseThrow();
+        model.addAttribute("locker", locker);
+        return "/locker/info";
+    }
 
     @PostMapping("/entrust")
     public ResponseEntity<SuccessDTO> entrust(@RequestBody EntrustDTO entrustInfo) {
