@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "ygd";
+    src: url('C:/Users/문지혜/Documents/GitHub/granola/font/윤고딕320.ttf');
+}
+
 html,body{
     margin:0; height:0;
     width:100%; height:100%;
