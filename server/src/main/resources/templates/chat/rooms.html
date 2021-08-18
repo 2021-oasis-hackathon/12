@@ -1,28 +1,98 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="www.thymeleaf.org">
-<div th:replace="/fragments/header.html :: header"></div>
 <head>
     <meta charset="UTF-8">
+    <div th:replace="/fragments/header.html :: header"></div>
+    <link rel="stylesheet" th:href="@{/css/rooms.css}">
     <title>RoomList</title>
 </head>
 <body>
-    <h2>채팅방 리스트</h2>
-    <form id="createForm" action="/chat/room" method="post">
-        <input type="submit" id="create" style="display:none" value="채팅방 생성">
-        <input type="hidden" id="userId" name="userId" th:value="${userId}">
-        <input type="hidden" id="hostId" name="hostId" value="hostId">
-    </form>
-    <tbody>
-    <tr th:each="i: ${list}">
-        <a th:href="|/chat/room/enter?id=${i.id}&userId=${userId}|" th:text="${i.name}"></a>
-    </tr>
-    </tbody>
+    <div class="root">
+        <div class="title">
+            <img class="logo" th:src="@{\img\message\02_메세지 아이콘.png}" >
+        </div>
+        <div class="message-body">
+        <tbody>
+            <tr th:each="i: ${list}">
+                <a th:id=${i.id} href="#" th:onclick="|callChatRoom(${i.id}, ${userId})|">
+                    <div class="chatInfo container px-4 py-3">
+                        <div class="row font-color" th:classappend="${i.getChecked(userId)} ? 'font-gray'">
+                            <div class='icon col-2'></div>
+                            <div class="col-7 d-flex" style="flex-direction:column">
+                                <block th:each="u : ${i.userChatRooms}">
+                                    <strong th:if="${u.otherId.equals(userId)}" th:text="${u.user.nickname}"></strong>
+                                </block>
+                                <small th:text="${i.renewalMessage}"></small>
+                            </div>
+                            <div class="col-3 time ">
+                                <small th:text="${i.getTime()}"></small>
+                                <img id="light" th:src="@{\img\message\06_메세지 아이콘-5 .png}"
+                                     style="width:15px; height:15px; align-self:center"
+                                     th:classappend="${i.getChecked(userId)} ? 'd-none'">
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </tr>
+        </tbody>
+        <form id="createForm" action="/chat/room" method="post">
+            <input type="submit" id="create" style="display:none">
+            <input type="hidden" id="userId" name="userId" th:value="${userId}">
+            <input type="hidden" id="hostId" name="hostId" value="hostId">
+        </form>
+        </div>
+    </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
+var stompClient = null;
+
+var list = /*[[ ${list} ]]*/;
+
+$(document).ready(function(){
+        $('html, body').scrollTop(document.body.scrollHeight)
+        connect();
+    });
+function connect(event) {
+
+var socket = new SockJS('/ws');
+stompClient = Stomp.over(socket);
+
+stompClient.connect({}, onConnected);
+}
+
+function onConnected() {
+    list.forEach(function(l) {
+        stompClient.subscribe('/sub/chat/room/' + l.id, onMessageReceived);
+    })
+}
+
+function disconnect() {
+    if (stompClient !== null) {
+        stompClient.disconnect();
+    }
+}
+window.onbeforeunload = function(e){
+    disconnect();
+}
+function onMessageReceived(payload) {
+    var message = JSON.parse(payload.body);
+    var receivedRoomId = message.roomId;
+    var parent = $(".message-body");
+    var select = $("a#" + receivedRoomId);
+    select.detach().prependTo(parent);
+    select.find(".font-color").removeClass("font-gray");
+    select.find("#light").removeClass("d-none");
+}
 
     function clickCreateRoom(hostId){
         $("#hostId").val(hostId);
         $("#createForm").submit();
+    }
+
+    function callChatRoom(roomId, userId) {
+        window.myJSInterfaceName.callChatRoom(roomId, userId);
     }
 </script>
 </html>

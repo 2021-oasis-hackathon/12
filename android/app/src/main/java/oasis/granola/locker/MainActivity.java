@@ -1,4 +1,5 @@
 package oasis.granola.locker;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -29,13 +30,28 @@ public class MainActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
+            Intent intent = getIntent();
+            int fragNum = intent.getIntExtra("fragment", 1);
             bottomNavigationView = findViewById(R.id.bnv_main);
 
-            doNavigate();
+            doNavigate(fragNum);
         }
-        private void doNavigate() {
+        private void doNavigate(int fragNum) {
             transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.frame_layout, frag1).commitAllowingStateLoss();
+            switch(fragNum){
+                case 1:
+                    bottomNavigationView.setSelectedItemId(R.id.first);
+                    transaction.replace(R.id.frame_layout, frag1).commitAllowingStateLoss();
+                    break;
+                case 2:
+                    bottomNavigationView.setSelectedItemId(R.id.second);
+                    transaction.replace(R.id.frame_layout, frag2).commitAllowingStateLoss();
+                    break;
+                case 3:
+                    bottomNavigationView.setSelectedItemId(R.id.third);
+                    transaction.replace(R.id.frame_layout, frag3).commitAllowingStateLoss();
+                    break;
+            }
 
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -51,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.third:
                             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, frag3).commit();
                             break;
-
                     }
                     return true;
                 }

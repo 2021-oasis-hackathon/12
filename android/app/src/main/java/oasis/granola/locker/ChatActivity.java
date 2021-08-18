@@ -1,7 +1,6 @@
-package oasis.granola.locker.fragment;
+package oasis.granola.locker;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,9 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -22,42 +19,34 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
-import oasis.granola.locker.AppHelper;
-import oasis.granola.locker.ChatRoomActivity;
-import oasis.granola.locker.LoginActivity;
-import oasis.granola.locker.MainActivity;
-import oasis.granola.locker.R;
-import oasis.granola.locker.ScanActivity;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
-import static android.content.Context.MODE_PRIVATE;
-
-public class Fragment2 extends Fragment {
-    private final String initialUrl = AppHelper.hostUrl + "/chat/rooms/dispatcher";
-    private String queryString;
+public class ChatActivity  extends AppCompatActivity {
+    private WebView webView;
     SharedPreferences tokenStore;
-    Handler handler = new Handler();
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment2, container, false);
+    private final String initialUrl = AppHelper.hostUrl + "/chat/room";
+    private String queryString;
 
-        WebView webView = (WebView) view.findViewById(R.id.webView);
-        tokenStore = getActivity().getSharedPreferences("tokenStore", MODE_PRIVATE);
-        String token = tokenStore.getString("token", null);
-        if (token != null) {
-            queryString = "?token=" + token;
-        }
-        initWebView(webView);
-        return view;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat);
+
+        Intent intent = getIntent();
+        int hostId = intent.getIntExtra("hostId", -1);
+        webView = (WebView) findViewById(R.id.webView);
+
+        tokenStore = getSharedPreferences("tokenStore", MODE_PRIVATE);
+        String token = tokenStore.getString("token", "");
+        queryString = "?token=" + token + "&hostId=" + hostId;
+        initWebView();
     }
 
-
-    private void initWebView(WebView webView){
+    private void initWebView(){
         WebSettings webSettings = webView.getSettings();
         webSettings.setUserAgentString("Mozilla/5.0 AppleWebKit/535.19 Chrome/56.0.0 Mobile Safari/535.19");
         webSettings.setDomStorageEnabled(true);
@@ -75,12 +64,11 @@ public class Fragment2 extends Fragment {
                 if (event.getAction() != KeyEvent.ACTION_DOWN)
                     return true;
 
-
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     if (webView.canGoBack()) {
                         webView.goBack();
                     } else {
-                        ((MainActivity) getActivity()).onBackPressed();
+                        intentTo();
                     }
 
                     return true;
@@ -88,7 +76,6 @@ public class Fragment2 extends Fragment {
                 return false;
             }
         });
-
         webView.setWebViewClient(new WebViewClient() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -130,11 +117,6 @@ public class Fragment2 extends Fragment {
                 js(webView,
                         "setInterval(map, 3000);"
                 );
-                Bundle bundle = getArguments();
-                if (bundle != null) {
-                    int hostId = bundle.getInt("hostId", 0);
-                    view.loadUrl("javascript:clickCreateRoom(" + hostId +")");
-                }
             }
         });
 
@@ -183,7 +165,7 @@ public class Fragment2 extends Fragment {
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         webView.loadUrl(initialUrl + queryString);
-        webView.addJavascriptInterface(new JavascriptInterface(),"myJSInterfaceName");
+
     }
     public void js(WebView view, String code)
     {
@@ -200,18 +182,10 @@ public class Fragment2 extends Fragment {
             view.loadUrl(javascriptCode);
         }
     }
-    final class JavascriptInterface {
-        @android.webkit.JavascriptInterface
-        public void callChatRoom(int roomId, int userId) {
-            handler.post(new Runnable() {
-                public void run() {
-                    Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
-                    intent.putExtra("roomId", roomId);
-                    intent.putExtra("userId", userId);
-                    startActivity(intent);
-                    getActivity().finish();
-                }
-            });
-        }
+    private void intentTo() {
+        Intent intent = new Intent(ChatActivity.this, MainActivity.class);
+        intent.putExtra("fragment", 2);
+        startActivity(intent);
+        finish();
     }
 }

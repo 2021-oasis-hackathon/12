@@ -18,6 +18,9 @@ public class UserChatRoom {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean isChecked;
+
     private Long otherId;
 
     @ManyToOne
