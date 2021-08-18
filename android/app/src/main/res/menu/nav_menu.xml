@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/second"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/underbar_message"
+        android:title="메시지" />
     <item
         android:id="@+id/first"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_list"
-        android:title="첫번째" />
-
-    <item android:id="@+id/second"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_pets"
-        android:title="두번째" />
+        android:icon="@drawable/underbar_home"
+        android:title="홈" />
 
     <item android:id="@+id/third"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_analytics"
-        android:title="세번째" />
+        android:icon="@drawable/underbar_mypage"
+        android:title="내 정보" />
 
 </menu>

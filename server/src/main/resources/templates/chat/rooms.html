@@ -22,7 +22,7 @@
                                 <block th:each="u : ${i.userChatRooms}">
                                     <strong th:if="${u.otherId.equals(userId)}" th:text="${u.user.nickname}"></strong>
                                 </block>
-                                <small th:text="${i.renewalMessage}"></small>
+                                <small id="renewal-message" th:text="${i.renewalMessage}"></small>
                             </div>
                             <div class="col-3 time ">
                                 <small th:text="${i.getTime()}"></small>
@@ -82,6 +82,7 @@ function onMessageReceived(payload) {
     var parent = $(".message-body");
     var select = $("a#" + receivedRoomId);
     select.detach().prependTo(parent);
+    select.find("#renewal-message").text(message.message);
     select.find(".font-color").removeClass("font-gray");
     select.find("#light").removeClass("d-none");
 }

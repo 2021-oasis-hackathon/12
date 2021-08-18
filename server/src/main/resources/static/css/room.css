@@ -1,3 +1,7 @@
+
+li span {
+    font-family:ygd
+}
 ul {
    list-style:none;
    padding-left:0px;
@@ -11,8 +15,25 @@ li {
     top:0;
     height:100px;
     width:100%;
-    background-color:rgb(0, 165, 19)
+    background-color:rgb(0, 165, 19);
+    display:flex;
+    align-items:flex-end;
 }
+.title .title-bar {
+    color:white;
+    font-size:25px;
+    display: flex;
+    align-items:center;
+    padding:0px 20px 10px 20px;
+    width:100%
+}
+.title .title-bar .go-back {
+    background-image:url("../img/chat/00 흰 화살.png");
+    background-size:contain;
+    background-repeat:no-repeat;
+    height:25%;
+}
+
 
 .text-align-end {
     text-align:end;
