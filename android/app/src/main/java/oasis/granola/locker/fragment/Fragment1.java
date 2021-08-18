@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import oasis.granola.locker.AppHelper;
+import oasis.granola.locker.ChatActivity;
 import oasis.granola.locker.CustomDialog;
 import oasis.granola.locker.LoginActivity;
 import oasis.granola.locker.MainActivity;
@@ -205,7 +206,6 @@ public class Fragment1 extends Fragment {
         MapPoint MARKER_POINT = MapPoint.mapPointWithGeoCoord(latitude, longitude);
         MapPOIItem marker = new MapPOIItem();
         marker.setItemName(name);
-        marker.setTag(index);
         marker.setMapPoint(MARKER_POINT);
 
         marker.setMarkerType((entrust) ? MapPOIItem.MarkerType.RedPin : MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
@@ -326,14 +326,18 @@ public class Fragment1 extends Fragment {
     public View.OnClickListener chatClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            customDialog.dismiss();
-            Bundle bundle = new Bundle();
-            bundle.putInt("hostId", hostId);
-            Fragment2 fragment2 = new Fragment2();
-            fragment2.setArguments(bundle);
-            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bnv_main);
-            bottomNavigationView.setSelectedItemId(R.id.second);
-            ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment2 ).commit();
+            Intent intent = new Intent(getActivity(), ChatActivity.class);
+            intent.putExtra("hostId", hostId);
+            startActivity(intent);
+            getActivity().finish();
+//            customDialog.dismiss();
+//            Bundle bundle = new Bundle();
+//            bundle.putInt("hostId", hostId);
+//            Fragment2 fragment2 = new Fragment2();
+//            fragment2.setArguments(bundle);
+//            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bnv_main);
+//            bottomNavigationView.setSelectedItemId(R.id.second);
+//            ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment2 ).commit();
         }
     };
 
