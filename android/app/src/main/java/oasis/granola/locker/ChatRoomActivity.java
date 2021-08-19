@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -25,6 +27,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     private WebView webView;
     private final String initialUrl = AppHelper.hostUrl + "/chat/room/enter";
     private String queryString;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,24 +101,6 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
 
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onLoadResource(WebView view, String url) {
-                js(webView,
-                        "setInterval(map, 3000);"
-                );
-            }
-
-            @Override
-            // Notify the host application that a page has finished loading.
-            public void onPageFinished(WebView view, String url)
-            {
-                js(webView,
-                        "setInterval(map, 3000);"
-                );
-            }
-        });
-
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
@@ -161,6 +146,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         webView.loadUrl(initialUrl + queryString);
+        webView.addJavascriptInterface(new JavascriptInterface(),"myJSInterfaceName");
 
     }
     public void js(WebView view, String code)
@@ -183,5 +169,17 @@ public class ChatRoomActivity extends AppCompatActivity {
         intent.putExtra("fragment", 2);
         startActivity(intent);
         finish();
+    }
+    final class JavascriptInterface {
+        @android.webkit.JavascriptInterface
+        public void closeChatRoom() {
+            handler.post(new Runnable() {
+                public void run() {
+                    webView.destroy();
+                    intentTo();
+                }
+            });
+
+        }
     }
 }

@@ -2,11 +2,10 @@ package spring.server.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import spring.server.dto.UserDTO;
+import spring.server.embeddable.UserInfo;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter @Setter
 @Entity
@@ -25,7 +24,7 @@ public class ChatMessage {
     private LocalDateTime createTime;
 
     @Embedded
-    private UserDTO user;
+    private UserInfo user;
     private String message;
 
 }

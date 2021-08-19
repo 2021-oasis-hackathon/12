@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <div th:replace="/fragments/header.html :: header"></div>
+    <style>
+        .locker {
+            width: 80%;
+            margin: 30px 30px 30px 40px;
+            display: flex;
+            justify-content: center;
+            height: 65px;
+            align-items: center;
+            border: 1px solid rgb(151, 151, 151);
+            border-radius: 19px;
+            color: rgb(151, 151, 151);
+            text-decoration: none;
+            font-family:ygd;
+        }
+    </style>
+</head>
+<body>
+<div class="img-wrap">
+    <img th:src="@{\img\보관소관리\보관소관리_초록상단바.png}" style="width:100%;">
+    <img th:src="@{\img\보관소관리\보관소관리.png}" style="width:20%; position:absolute; top:97px; left:73px">
+    <a th:href="|@{/mypage/}${userId}|">
+        <img th:src="@{\img\alarm\00 흰 화살.png}" style="width:5%; position:absolute; top:93px; left:34px"></a>
+</div>
+<div class="list">
+    <li style="list-style: none;">
+        <div class="img_agea" >
+            <block th:each="i : ${lockers}">
+                <a class="locker" th:href="|@{/locker/info/}${i.id}|">
+                    <div th:text="${i.lockerName}"></div>
+                </a>
+            </block>
+            <a th:href="|@{/locker/register/}${userId}|">
+                <img th:src="@{\img\보관소관리\보관소관리_추가.png}"
+                     style="width:80%;display:block; margin:30px 30px 30px 40px">
+            </a>
+        </div>
+    </li>
+</div>
+
+</body>
+</html>

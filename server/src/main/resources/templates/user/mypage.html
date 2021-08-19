@@ -12,96 +12,48 @@
         <div class="img-wrap">
             <img th:src="@{\img\mypage\마이페이지_상단바.png}" style="width:100%;">
         </div>
-        <a href="alarm.html">
+        <a th:href="@{/etc/alarm}">
             <img class="bell" th:src="@{\img\mypage\마이페이지_알림.png}" >
         </a>
             <img class="bar" th:src="@{\img\mypage\00 프로필_대지 1.jpg}">
-            <p style="position: absolute; font-size: 25px;left: 32%;top: 166px; font-family: ygd; font-weight:bold; letter-spacing:-2.5px"
+            <p style="position: absolute; font-size: 25px;left: 33%;top: 195px; font-family: ygd; font-weight:bold; letter-spacing:-2.5px"
                th:text="${user.nickname}">
                 황인준
             </p>
 
-        <div class="group">
+        <div class="group" style="margin-top:70px">
             <img th:src="@{\img\mypage\마이페이지_라인.png}" style="position: relative;width: 82%; top: 145px; left: 38px;">
             <li>
                 <a th:href="@{/etc/notice}">
                     <img th:src="@{\img\mypage\마이페이지_공지사항.png}" style="width:40%; margin-left:20px"></a>
-                <a th:href="|@{/locker/storage}?id=${user.id}|">
+                <a th:href="|@{/locker/storage/}${user.id}|">
                     <img th:src="@{\img\mypage\보관소.png}" style="width:40%; margin-left:25px"></a>
-                <a th:href="@{locker/list}"><img th:src="@{\img\mypage\이용내역.png}" style="width:40%"></a>
+                <a th:href="@{/etc/list}"><img th:src="@{\img\mypage\이용내역.png}" style="width:40%"></a>
             </li>
+            <div >
             <img th:src="@{\img\mypage\00 프로필2_대지 1.jpg}"
                  style="width:90%; position: relative; top:155px;left:20px; padding-bottom: 100px;">
-            <block th:if="|${entrustLocker} == null|">
-                <p style="position: absolute; font-size: 15px;left: 184px;bottom: 166px; font-family: ygd; color:#fff">
+            <block th:unless="${user.hasEntrustLocker()}">
+                <p style="position: absolute; font-size: 15px;left: 170px;top: 500px; font-family: ygd; color:#fff">
                     이용 내역이
                 </p>
-                <p style="position: absolute; font-size: 15px;left: 193px;bottom: 147px; font-family: ygd; color:#fff">
+                <p style="position: absolute; font-size: 15px;left: 178px;top: 520px; font-family: ygd; color:#fff">
                     없습니다.
                 </p>
             </block>
-            <block th:unless="|${entrustLocker} == null|">
-                <p th:text="${user.getLockerUsedTime()}" style="position: absolute; font-size: 22px;left: 196px;bottom: 141px; font-family: ygd; color:#fff">
+            <block th:if="${user.hasEntrustLocker()}">
+                <p th:text="${user.getLockerUsedTime()}" style="position: absolute; font-size: 22px;left: 172px;top: 502px; font-family: ygd; color:#fff">
                     00:50
                 </p>
-                <p th:text="${entrustLocker.name}" style="position: absolute; font-size: 19px;left: 190px;bottom: 83px; letter-spacing: -2.5px;font-family: ygd;">
+                <p th:text="${entrustLocker.lockerName}" style="position: absolute; font-size: 19px;left: 178px;top: 560px; letter-spacing: -2.5px;font-family: ygd;">
                     민트약국
                 </p>
             </block>
-
+            </div>
 
         </div>
     </div>
 </div>
-<!--<div >-->
-<!--    <h1 th:text="*{nickname}">기본 메시지</h1>-->
-<!--    <div class="accordion accordion-flush" id="accordionFlushExample">-->
-<!--        <div class="accordion-item">-->
-<!--            <h2 class="accordion-header" id="flush-headingOne">-->
-<!--                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">-->
-<!--                    보관소 관리-->
-<!--                </button>-->
-<!--            </h2>-->
-<!--            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">-->
-<!--                <div class="accordion-body">-->
-<!--                    <a href="/locker/register" th:href="|@{/locker/register/}*{id}|">보관소 등록</a>-->
-<!--                    <ul>-->
-<!--                        <li th:each="l : ${lockers}">-->
-<!--                            <a th:href="|/locker/info/${l.id}|" th:text="${l.lockerName}"></a>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--&lt;!&ndash;                    + 보관소 리스트에 수정, 삭제&ndash;&gt;-->
-<!--                </div>-->
-<!--                <div class="accordion-body">-->
-<!--                    <span>수정, 삭제 만들어야함</span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="accordion-item">-->
-<!--            <h2 class="accordion-header" id="flush-headingTwo">-->
-<!--                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">-->
-<!--                    Accordion Item #2-->
-<!--                </button>-->
-<!--            </h2>-->
-<!--            <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">-->
-<!--                <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="accordion-item">-->
-<!--            <h2 class="accordion-header" id="flush-headingThree">-->
-<!--                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">-->
-<!--                    로그아웃-->
-<!--                </button>-->
-<!--            </h2>-->
-<!--            <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">-->
-<!--                <div>-->
-<!--                    <input type="hidden" id="userId" name="userId" th:value="*{id}">-->
-<!--                    <input id="logout-btn" type="submit" value="로그아웃">-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
 </body>
 <script type="text/javascript">
     $("#logout-btn").on("click", function (){

@@ -6,42 +6,53 @@
     <div th:replace="/fragments/header.html :: header"></div>
 </head>
 <body>
-    <form action="/locker/register" th:action="@{/locker/register}" th:object="${locker}" method="post">
-        <input type="hidden" th:field="*{user.id}">
-        <input type="hidden" th:field="*{latitude}">
-        <input type="hidden" th:field="*{longitude}">
-        <div class="form-group">
-            <label for="name">보관소 이름</label>
-            <input type="text" class="form-control" th:field="*{lockerName}" id="name" placeholder="보관소 이름을 적어주세요">
-            <small th:errors="*{lockerName}"></small>
-        </div>
-        <div class="form-group">
-            <label for="address">주소</label>
-            <small th:errors="*{latitude}"></small>
-            <input type="text" class="form-control" th:field="*{address}" id="address" placeholder="주소">
-            <small th:errors="*{address}"></small>
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" th:field="*{addressDetail}" id="address-detail"
-                   placeholder="상세주소">
-            <small th:errors="*{addressDetail}"></small>
-        </div>
-        <input type="button" onclick="sample2_execDaumPostcode()" value="우편번호 찾기">
-        <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
+<div class="header">
+    <img th:src="@{\img\보관소관리\보관함등록_배경.jpg}" style="width: 100%; position: absolute;">
+    <img th:src="@{\img\보관소관리\보관함등록_보관함추가.png}" style="width: 20%; position: relative; top: 42px; left:80px">
+    <img id="goback" th:src="@{\img\alarm\00 흰 화살.png}" style="width:5%; position:absolute; top:38px; left:34px">
+    <p id="submit-btn" style="position: absolute; font-size: 18px;right: 40px; top: 40px; font-family: ygd; color:#fff; letter-spacing:-1.5px">저장</p>
+</div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <!-- iOS에서는 position:fixed 버그가 있음, 적용하는 사이트에 맞게 position:absolute 등을 이용하여 top,left값 조정 필요 -->
-        <div id="layer" style="display:none;position:fixed;overflow:hidden;z-index:1;-webkit-overflow-scrolling:touch;">
-            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnCloseLayer" style="cursor:pointer;position:absolute;right:-3px;top:-3px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">
-        </div>
-    </form>
+<form id="registerForm" action="/locker/register" th:action="@{/locker/register}" th:object="${locker}" method="post">
+    <input type="hidden" th:field="*{user.id}">
+    <input type="hidden" th:field="*{latitude}">
+    <input type="hidden" th:field="*{longitude}">
+    <img th:src="@{\img\보관소관리\보관함등록_보관소이름.png}" style="width: 70%;position: relative;top: 400px; left: 15%;">
+    <div class="form-group">
+        <input type="text" class="form-control" th:field="*{lockerName}" id="name" placeholder="이름 입력"
+               style="background-color:#fff; position: absolute; border:none;left:15%;top:454px;width:68%"
+        >
+    </div>
+    <img th:src="@{\img\보관소관리\보관함등록_주소.png}" style="width: 70%;position: relative;top: 450px; left: 15%;">
 
+    <input type="text" placeholder="주소 입력" >
+    <div class="form-group">
+        <input type="text" class="form-control" th:field="*{address}" id="address" placeholder="주소 입력"
+               style="background-color:#fff; position: absolute; border:none;left:15%;top:571px;width:68%">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" th:field="*{addressDetail}" id="address-detail" placeholder="상세주소"
+               style="background-color:#fff; position: absolute; border:none;left:15%;top:626px;width:68%">
+    </div>
+    <input type="button" onclick="sample2_execDaumPostcode()" value="우편번호 찾기"
+           style="background-color:rgb(255, 222, 31); color:#fff;position: absolute; border:none;left:15%;top:684px; border-radius: 20px;width: 32%;">
+
+<!--    <button type="submit" class="btn btn-primary">Submit</button>-->
+
+    <div id="map" style="width:300px;height:300px;display:none;
+    position: absolute; border:none;left:15%;top:724px; width:70vw; border-radius: 20px;width: 70vw;"></div>
+    <div id="layer" style="display:none;position:fixed;overflow:hidden;z-index:1;-webkit-overflow-scrolling:touch;">
+        <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnCloseLayer" style="cursor:pointer;position:absolute;right:-3px;top:-3px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">
+    </div>
+</form>
 </body>
-
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8ca25e4282e787f4b61068e15c7afcb8&libraries=services"></script>
 <script type="text/javascript">
+    $("#goback").on("click", function() {
+        window.history.back();
+    })
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         mapOption = {
             center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
@@ -157,5 +168,9 @@
         element_layer.style.left = (((window.innerWidth || document.documentElement.clientWidth) - width)/2 - borderWidth) + 'px';
         element_layer.style.top = (((window.innerHeight || document.documentElement.clientHeight) - height)/2 - borderWidth) + 'px';
     }
+
+    $("#submit-btn").on("click", function() {
+        $("#registerForm").submit();
+    })
 </script>
 </html>

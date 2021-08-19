@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="www.thymeleaf.org">
 <head>
@@ -8,9 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" />
 </head>
 <body>
-    <img id="goback"th:src="@{\img\alarm\00 흰 화살.png}" style="width:5%; position:absolute; top:93px; left:34px">
-    <img th:src="@{\img\notice\00 공지 목록-02.jpg}" style="width:100%">
-    <a th:href="@{/etc/use}"><img th:src="@{\img\notice\00 공지사항 이용요금.png}" style="width: 85%; position: relative; top: 17px; left:35px;"></a>
+<div class="root">
+    <img th:src="@{\img\notice\요금.jpg}" style="width: 100%;">
+    <img id="goback" th:src="@{\img\notice\서비스평가_X아이콘.png}" style="width:6%; position:absolute;left:34px;top:34px">
+</div>
 </body>
 <script type="text/javascript">
     $("#goback").on("click", function() {

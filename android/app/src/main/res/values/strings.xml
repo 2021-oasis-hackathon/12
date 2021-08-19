@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">locker</string>
+    <string name="app_name">맡기랑께</string>
+    <string name="talk">대화하기</string>
+    <string name="entrust">맡기기</string>
+    <string name="cancle">취소하기</string>
+    <string name="lockerName">%s</string>
+    <string name="address">%s</string>
+    <string name="addressDetail">%s</string>
 </resources>

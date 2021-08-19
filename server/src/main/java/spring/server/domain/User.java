@@ -4,17 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import spring.server.dto.UserDTO;
+import spring.server.embeddable.UserInfo;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,15 +38,15 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "entrust_locker_id")
     private Locker entrustLocker;   //내가 짐을 맡긴 보관소
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime entrustTime;
 
     public void passwordEncoding(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
     }
 
-    public UserDTO getUserDTO() {
-        return new UserDTO(this.getId(), this.getUsername(), this.getNickname());
+    public UserInfo getUserInfo () {
+        UserInfo userInfo = new UserInfo(this.id, this.nickname);
+        return userInfo;
     }
 
     public void entrust(Locker locker) {
@@ -61,10 +56,17 @@ public class User {
 
     public String getLockerUsedTime() {
         Duration duration = Duration.between(entrustTime, LocalDateTime.now());
-        long minute = duration.getSeconds() / 60;
-        long hour = duration.getSeconds() / 3600;
+        long seconds = duration.getSeconds();
+        long hour = seconds / 3600;
+        long minute = seconds % 3600;
+         minute = minute / 60;
         String result = (hour < 10) ? "0" + hour : String.valueOf(hour);
+        result += " : ";
         result += (minute < 10) ? "0" + minute : minute;
         return result;
+    }
+
+    public boolean hasEntrustLocker() {
+        return entrustLocker == null ? false : true;
     }
 }

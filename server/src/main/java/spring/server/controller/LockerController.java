@@ -78,11 +78,13 @@ public class LockerController {
         model.addAttribute("locker", locker);
         return "/locker/info";
     }
-    @GetMapping("/storage")
-    public String myLocker(Model model, @PathVariable("id") Long id) {
-        Locker locker = lockerService.findById(id).orElseThrow();
-        model.addAttribute("locker", locker);
-        return "/locker/info";
+    @GetMapping("/storage/{id}")
+    public String myLocker(Model model, @PathVariable("id") Long userId) {
+        User findUser = userService.findById(userId).orElseThrow(RuntimeException::new);
+        List<Locker> lockers = lockerService.findByUserId(findUser.getId());
+        model.addAttribute("userId", userId);
+        model.addAttribute("lockers", lockers);
+        return "/locker/storage";
     }
 
     @PostMapping("/entrust")
