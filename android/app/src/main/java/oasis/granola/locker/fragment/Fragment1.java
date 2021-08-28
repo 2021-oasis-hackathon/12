@@ -2,8 +2,10 @@ package oasis.granola.locker.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
@@ -40,6 +42,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import design.ivisionblog.apps.reviewdialoglibrary.FeedBackActionsListeners;
+import design.ivisionblog.apps.reviewdialoglibrary.FeedBackDialog;
 import oasis.granola.locker.AppHelper;
 import oasis.granola.locker.ChatActivity;
 import oasis.granola.locker.CustomDialog;
@@ -59,7 +63,6 @@ public class Fragment1 extends Fragment {
     private String token;
     private Boolean isEntrust = false;
     private boolean firstGetLocationFlag;
-
     Dialog customDialog;
 
 //    위치정보를 읽어들이지 못했을 때 기본좌표
@@ -295,7 +298,6 @@ public class Fragment1 extends Fragment {
                 String address = lockerInfo.getString("address");
                 String addressDetail = lockerInfo.getString("addressDetail");
                 int userId = lockerInfo.getInt("userId");
-
                 hostId = userId;
                 dialogName.setText(lockerName);
                 dialogAddress.setText(address);

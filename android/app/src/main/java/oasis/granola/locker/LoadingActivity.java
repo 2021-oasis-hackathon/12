@@ -9,8 +9,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -22,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,15 +39,22 @@ public class LoadingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
-
+        ImageView loading = findViewById(R.id.imageView);
+        Glide.with(this).load(R.raw.loading).into(loading);
         tokenStore = getSharedPreferences("tokenStore", MODE_PRIVATE);
 //        권한 체크 -> 로그인 체크
-        permissionCheck();
-
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                permissionCheck();
+            }
+        }, 3000);
     }
     private void loginCheck() {
-        String token = tokenStore.getString("token", "");
-        if (token == "") {
+        String token = tokenStore.getString("token", null);
+        if (token == null) {
             intentToLogin();
         } else {
             try {

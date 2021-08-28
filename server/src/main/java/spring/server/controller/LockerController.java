@@ -19,6 +19,7 @@ import spring.server.service.LockerService;
 import spring.server.service.UserService;
 import spring.server.token.JwtToken;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -77,6 +78,14 @@ public class LockerController {
         model.addAttribute("locker", locker);
         return "/locker/info";
     }
+    @GetMapping("/storage/{id}")
+    public String myLocker(Model model, @PathVariable("id") Long userId) {
+        User findUser = userService.findById(userId).orElseThrow(RuntimeException::new);
+        List<Locker> lockers = lockerService.findByUserId(findUser.getId());
+        model.addAttribute("userId", userId);
+        model.addAttribute("lockers", lockers);
+        return "/locker/storage";
+    }
 
     @PostMapping("/entrust")
     public ResponseEntity<SuccessDTO> entrust(@RequestBody EntrustDTO entrustInfo) {
@@ -90,8 +99,10 @@ public class LockerController {
         User user = userService.findByUsername(username);
         if (entrustInfo.isEntrust() && user.getEntrustLocker().equals(locker)) {
             user.setEntrustLocker(null);
+            user.setEntrustTime(null);
             userService.save(user);
         } else {
+            user.setEntrustTime(LocalDateTime.now());
             userService.entrust(user, locker);
         }
         return ResponseEntity.ok(new SuccessDTO(true, locker.getLockerName() + "에 짐을 맡겼습니다."));

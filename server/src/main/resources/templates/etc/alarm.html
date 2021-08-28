@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
+<head>
+    <div th:replace="/fragments/header.html :: header"></div>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" />
+</head>
+<body>
+<div class="root">
+    <img id="goback" th:src="@{\img\alarm\00 흰 화살.png}" style="width:5%; position:absolute; top:93px; left:34px">
+    <img th:src="@{\img\alarm\00 알림, 이용요금 창-05.jpg}" style="width:100%">
+</div>
+</body>
+<script type="text/javascript">
+    $("#goback").on("click", function() {
+        window.history.back();
+    })
+</script>
+</html>

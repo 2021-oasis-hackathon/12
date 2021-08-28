@@ -7,7 +7,10 @@ ul {
    padding-left:0px;
 }
 li {
-    margin: 20px 0px;
+    height:40px;
+}
+small {
+    font-size:0.5ren !important;
 }
 
 .title {
@@ -38,9 +41,15 @@ li {
 .text-align-end {
     text-align:end;
 }
-
+.chat-message {
+    height:100%;
+}
+.chat-message small{
+   font-size:0.5rem;
+   margin:0 6px;
+}
 .chat-message span {
-    padding: 8px 16px ;
+    padding: 6px 12px;
     border:1px solid #dee2e6;
     border-radius:20px;
 }
@@ -48,6 +57,6 @@ li {
 .text-align-end span{
     color:white;
     background-color:rgb(0, 165, 19);
-    border:1px;
+    border:0px;
 }
 

@@ -30,6 +30,7 @@ public class Locker {
     private Double longitude;
     private String qrcode;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user; //호스트

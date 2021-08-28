@@ -31,7 +31,7 @@ public class ChatController {
         if (!ChatMessage.MessageType.JOIN.equals(message.getType())) {
 //            message.setMessage(message.getSender() + "님이 입장하셨습니다.");
             User user = userService.findById(message.getSenderId()).orElseThrow(RuntimeException::new);
-            message.setUser(user.getUserDTO());
+            message.setUser(user.getUserInfo());
             message.setCreateTime(LocalDateTime.now());
             ChatRoom room = chatRoomRepository.findRoomById(message.getRoomId());
             room.setRenewalTime(LocalDateTime.now());

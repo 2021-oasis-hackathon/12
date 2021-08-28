@@ -12,48 +12,54 @@
     <div class="title d-flex">
         <div class="title-bar">
             <div style="width:12%; display:flex">
-                <img th:src="@{/img/chat/00 흰 화살.png}" style="width:20px; height:20px">
+                <img id="goback" th:src="@{/img/chat/00 흰 화살.png}" style="width:20px; height:20px">
             </div>
-<!--            <div class="go-back" style="width:15%"></div>-->
-            <span th:text="${user.nickname}" style="width:68%"></span>
+            <block th:each="u : ${room.userChatRooms}">
+                <span th:if="${u.otherId.equals(user.id)}" th:text="${u.user.nickname}" style="width:68%"></span>
+            </block>
             <div style="width:20%">
-                <img src="C:\Users\문지혜\Documents\GitHub\granola\img\chat\02_채팅방.png" style="width:6%; position:relative; top:88px; left: 212px">
-                <img src="C:\Users\문지혜\Documents\GitHub\granola\img\chat\03_채팅방.png" style="width:6%; position:relative; top:84px; left: 238px">
+                <img th:src="@{\img\chat\02_채팅방.png}" style="width:6%; position:relative; top:88px; left: 212px">
+                <img th:src="@{\img\chat\03_채팅방.png}" style="width:6%; position:relative; top:84px; left: 238px">
             </div>
         </div>
         </div>
     <div class="container px-4" style="margin-top:120px">
-        <ul id="messageArea">
+        <ul id="messageArea" style="margin-bottom:3rem">
             <li th:each="m : ${messages}">
                 <div class="chat-message">
                     <block th:if="${m.user.id} == ${user.id}">
                         <div class="text-align-end">
+                            <small th:text="${#temporals.format(m.createTime, 'a hh:mm')}"></small>
                             <span th:text="${m.message}"></span>
                         </div>
                     </block>
                     <block th:unless="${m.user.id} == ${user.id}">
                         <div class="">
                             <span th:text="${m.message}"></span>
+                            <small th:text="${#temporals.format(m.createTime, 'a hh:mm')}"></small>
                         </div>
                     </block>
                 </div>
             </li>
         </ul>
-        <div id="messageForm" name="messageForm">
-            <div class="form-group">
-                <div class="input-group">
-                    <img src="C:\Users\문지혜\Documents\GitHub\granola\img\chat\08_채팅방.png" style="width:6%; position:relative; left:25px; top:6px">
-                    <input type="text" id="message" placeholder="메세지를 입력하세요." autocomplete="off" class="form-control" 
-                    style="border:0;; width:80%; background: #fff; border-radius: 20px; height:30px; padding-left:5px; box-sizing:border-box; margin-top:5px; position: relative; left:9%; bottom:3px">
-                    <button id="formSubmit" type="submit" class="primary"><img src="C:\Users\문지혜\Documents\GitHub\granola\img\chat\09_채팅방.png" style="width:6%; position:relative; top:6px">보내기</button>
-                </div>
+
+    </div>
+    <div id="messageForm" name="messageForm" style="position:fixed; bottom:0; width:100%">
+        <div class="form-group">
+            <div class="input-group d-flex py-2" style="background-color:#dee2e6; align-items:center">
+                <img th:src="@{\img\chat\08_채팅방.png}" class="px-2" style="height:32px; border-radius:16px">
+                <input type="text" id="message" placeholder="메세지를 입력하세요."
+                       autocomplete="off" class="form-control" style="border-radius:30px">
+                    <img id="formSubmit" class="px-2" th:src="@{\img\chat\09_채팅방.png}" style="height:32px">
+
             </div>
         </div>
     </div>
-
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
 <script th:inline="javascript">
 /*<![CDATA[*/
     var messageForm = document.querySelector('#messageForm');
@@ -64,7 +70,7 @@
 var stompClient = null;
 
 var senderId = /*[[ ${user.id} ]]*/;
-var roomId = /*[[ ${roomId} ]]*/;
+var roomId = /*[[ ${room.id} ]]*/;
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -134,24 +140,25 @@ function onMessageReceived(payload) {
         alignElement.classList.add('text-align-end');
     }
 
-<!--        var avatarElement = document.createElement('i');-->
-<!--        var avatarText = document.createTextNode(message.user.nickname[0]);-->
-<!--        avatarElement.appendChild(avatarText);-->
-<!--        avatarElement.style['background-color'] = getAvatarColor(message.user.nickname);-->
-
-<!--        messageElement.appendChild(avatarElement);-->
-
-<!--        var usernameElement = document.createElement('span');-->
-<!--        var usernameText = document.createTextNode(message.user.nickname);-->
-<!--        usernameElement.appendChild(usernameText);-->
-<!--        messageElement.appendChild(usernameElement);-->
 
 
     var textElement = document.createElement('span');
     var messageText = document.createTextNode(message.message);
     textElement.appendChild(messageText);
 
-    alignElement.appendChild(textElement);
+
+    var smallElement = document.createElement('small');
+    var timeText = document.createTextNode(currentTime());
+    smallElement.appendChild(timeText);
+
+    if (message.user.id == senderId) {
+        alignElement.appendChild(smallElement);
+        alignElement.appendChild(textElement);
+    } else  {
+        alignElement.appendChild(textElement);
+        alignElement.appendChild(smallElement);
+    }
+
     divElement.appendChild(alignElement);
 
     messageElement.appendChild(divElement);
@@ -173,10 +180,27 @@ function onMessageReceived(payload) {
             <!--서버상태 이상으로 데이터를 못가져오는 경우 알림            -->
         })
 }
-
+var currentTime = function(){
+    var today = moment();
+    var result = "";
+    if (moment().format('a') == "am") {
+        result = "오전 ";
+    }
+    else {
+        result = "오후 ";
+    }
+     return result + today.format('hh:mm');
+}
 $("#formSubmit").on("click", function () {
     sendMessage();
 })
+function closeChatRoom(){
+    window.myJSInterfaceName.closeChatRoom();
+}
+$("#goback").on("click", function () {
+    closeChatRoom();
+})
+
 /*]]*/
 </script>
 </html>

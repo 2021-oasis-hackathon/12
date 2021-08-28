@@ -1,19 +1,18 @@
-package spring.server.dto;
+package spring.server.embeddable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spring.server.domain.Locker;
 
 import javax.persistence.Embeddable;
 
-@Getter @Setter
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-public class UserDTO {
+public class UserInfo {
     private Long id;
-    private String username;
     private String nickname;
 }

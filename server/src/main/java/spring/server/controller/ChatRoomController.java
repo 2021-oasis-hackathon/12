@@ -15,6 +15,7 @@ import spring.server.dto.CreateChatRoomDTO;
 import spring.server.dto.ReceiveCheckDTO;
 import spring.server.dto.SuccessDTO;
 import spring.server.repository.ChatMessageRepository;
+import spring.server.repository.ChatRoomRepository;
 import spring.server.repository.UserChatRoomRepository;
 import spring.server.service.ChatService;
 import spring.server.service.UserService;
@@ -30,6 +31,7 @@ import java.util.Optional;
 public class ChatRoomController {
     private final ChatService chatService;
     private final UserService userService;
+    private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final UserChatRoomRepository userChatRoomRepository;
 
@@ -74,7 +76,7 @@ public class ChatRoomController {
         User user = userService.findById(userId).orElseThrow(RuntimeException::new);
         model.addAttribute("messages", messages);
         model.addAttribute("user", user);
-        model.addAttribute("roomId", roomId);
+        model.addAttribute("room", chatRoomRepository.findRoomById(roomId));
             return "/chat/room";
     }
 
